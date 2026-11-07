@@ -6,7 +6,7 @@ ProofRoute reviews a synthetic recruiting message, checks a reviewed employer ca
 
 ## Run locally
 
-Requires Node.js 22.16 or newer. Dependencies are pinned in the workspace `package.json` files.
+Requires Node.js 22.22 or newer. Dependencies are pinned in the workspace `package.json` files.
 
 ```bash
 npm ci

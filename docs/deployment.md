@@ -38,7 +38,7 @@ Use one web service. SQLite is unsafe across more than one instance, so leave th
 
 1. Push the repository to the Git host you want Render to read.
 2. Create a Blueprint from `render.yaml`, or create a Node web service by hand with the same commands.
-3. Build command: `npm ci && npm run build`.
+3. Build command: `npm ci --include=dev && npm run build`. Build tools and the TypeScript runtime are development dependencies and must be installed on the host.
 4. Start command: `npm start`.
 5. Node version: `22.22.0`.
 6. Add a persistent disk mounted at `/var/data`. One gigabyte is enough for this demo. Render persistent disks require a paid instance type; confirm the current price before you create it. The disk must survive restarts and deploys.
