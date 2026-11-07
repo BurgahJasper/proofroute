@@ -125,7 +125,7 @@ export function HomePage() {
           A little evidence. A clearer next step.
         </p>
         <h1 className="hero-title" data-reveal>
-          The job may<br />be real.<br /><span>Check who’s<br className="desktop-break" /> offering it.</span>
+          The job may<br /> be real.<br /><span>Check who’s<br className="desktop-break" /> offering it.</span>
         </h1>
         <p className="hero-description" data-reveal>
           A convincing offer isn’t the whole story. Trace the claims, see the sources, and find your way back to the employer.

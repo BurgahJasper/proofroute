@@ -25,8 +25,10 @@ const FORBIDDEN_REASON =
   /\b(sender (is )?(authenticated|authorized|verified|legitimate)|verified sender|offer verified|guaranteed safe|safe offer|this (offer|recruiter) is safe)\b/i;
 
 function emptySpan(text: string): TextSpan {
-  const quote = text.slice(0, Math.min(80, text.length));
-  return { start: 0, end: quote.length, quote };
+  // A carried-over source can support a listing without a matching phrase
+  // in this message. Never fabricate a quote from an unrelated prefix.
+  void text;
+  return { start: 0, end: 0, quote: '' };
 }
 
 function spanFrom(text: string, quote: string | undefined): TextSpan {

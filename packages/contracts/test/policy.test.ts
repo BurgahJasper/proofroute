@@ -56,6 +56,17 @@ function base(overrides: Partial<PolicyInput> = {}): PolicyInput {
   };
 }
 
+test('follow-up source claims never quote unrelated message text', () => {
+  const result = reduceAssessment(base({ reviewedText: scenario.followUpText, risks: detectRisks(scenario.followUpText) }));
+  for (const key of ['listing', 'employer_route', 'sender']) {
+    const finding = result.findings.find(item => item.claimKey === key);
+    assert.equal(finding?.inputSpan.quote, '');
+  }
+  assert.equal(result.findings.find(item => item.claimKey === 'listing')?.status, 'supported');
+  assert.equal(result.recommendedAction, 'pause_sensitive_action');
+  assert.ok(result.findings.find(item => item.claimKey === 'request')?.inputSpan.quote);
+});
+
 test('a found listing does not authenticate the sender', () => {
   const result = reduceAssessment(base());
   const sender = result.findings.find((finding) => finding.claimKey === 'sender');
