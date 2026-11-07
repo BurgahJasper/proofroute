@@ -1,6 +1,10 @@
 # Deployment
 
-Not deployed. These are the exact steps for a local production process and for a single Render web service. No hosting purchase was made for this build.
+Public demo: https://proofroute-nufm.onrender.com. Created November 7, 2026 from the public repository https://github.com/BurgahJasper/proofroute, branch `codex/publish-demo`, application commit `75e3675`.
+
+Render uses one $7/month instance and a 1 GB persistent disk at $0.25/month, plus applicable taxes and usage. The owner approved this recurring setup. NVIDIA credentials are stored in the service environment. The first public synthetic check completed as Model-assisted with the listing supported and sender unresolved; the equipment-payment follow-up changed the recommendation to a pause.
+
+Public verification: `/healthz` returned `ok: true`; case version 2 remained readable after a service restart; the downloaded Markdown contained the payment pause and Nemotron model attribution. At a 390px viewport the case had no horizontal overflow and showed the recommendation before the evidence cards. Restarting this single-instance service temporarily returns 502 while Render replaces the process.
 
 The app serves the built frontend and the API from one Node process. SQLite is created at startup. There is no separate database service.
 
