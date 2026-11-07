@@ -1,0 +1,10 @@
+{
+  "id": "scn-missing-listing",
+  "title": "Role not in the sources checked",
+  "banner": "Synthetic message. No employer affiliation. A missing listing is not a fraud finding.",
+  "employerId": "figma",
+  "jobId": "0000000999",
+  "whatItShows": "A requisition that is not on the reviewed board stays unresolved.",
+  "text": "From: Sam Ortiz <sam.ortiz@hiring.invalid>\nSubject: Figma role 0000000999\n\nHi Jordan,\n\nWe are reaching out about Figma requisition 0000000999, Special Projects Intern. Reply to this email to begin.\n\nSam Ortiz\nsam.ortiz@hiring.invalid\n",
+  "followUpText": ""
+}

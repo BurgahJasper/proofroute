@@ -1,0 +1,24 @@
+node_modules/
+dist/
+apps/*/dist/
+packages/*/dist/
+coverage/
+test-results/
+playwright-report/
+*.log
+*.tsbuildinfo
+
+# Secrets and local state
+.env
+.env.*
+!.env.example
+data/*.sqlite
+data/*.sqlite-*
+data/*.sqlite-journal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Scratch downloads and local caches
+tmp/
+eval/private/

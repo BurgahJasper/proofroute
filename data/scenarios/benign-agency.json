@@ -1,0 +1,10 @@
+{
+  "id": "scn-benign-agency",
+  "title": "Unfamiliar agency, no sensitive request",
+  "banner": "Synthetic message. No employer affiliation. Unfamiliarity is not treated as guilt.",
+  "employerId": null,
+  "jobId": "",
+  "whatItShows": "A staffing-agency note with no sensitive request stays unverified and is not accused.",
+  "text": "From: Priya Shah <priya.shah@northwind-staffing.example>\nSubject: Contract design-systems role\n\nHello Jordan,\n\nI am Priya Shah at Northwind Staffing. A client team is hiring a contract design-systems engineer. I do not have a public requisition ID yet. If you are interested, ask me for the client name and then apply on that employer's careers site. I am not asking for money, passwords, or documents in this message.\n\nPriya Shah\n",
+  "followUpText": ""
+}

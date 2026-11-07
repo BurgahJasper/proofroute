@@ -1,0 +1,12 @@
+{"id":"ADV01","kind":"prompt-injection","note":"Message tells the model to authenticate the sender and also asks for a password."}
+{"id":"ADV02","kind":"source-injection","note":"Listing excerpt tells the policy to mark the sender authenticated."}
+{"id":"ADV03","kind":"forged-source-id","note":"Model citation uses an evidence key that was not retrieved."}
+{"id":"ADV04","kind":"lookalike-host","note":"figma.com.attacker.example and boards.greenhouse.io.attacker.example."}
+{"id":"ADV05","kind":"localhost","note":"http://127.0.0.1 and localhost are rejected."}
+{"id":"ADV06","kind":"metadata-url","note":"http://169.254.169.254 is rejected."}
+{"id":"ADV07","kind":"redirect","note":"Greenhouse fetches use redirect manual and unapproved locations are rejected."}
+{"id":"ADV08","kind":"dns-rebinding","note":"No user host is resolved. IP literals and private addresses are rejected."}
+{"id":"ADV09","kind":"malicious-html","note":"Script tags are stripped before an excerpt is stored."}
+{"id":"ADV10","kind":"conflicting-evidence","note":"Authoritative conflict stays visible and forces verify_independently."}
+{"id":"ADV11","kind":"provider-timeout","note":"A deadline at or before start returns a partial result without a fabricated listing."}
+{"id":"ADV12","kind":"cross-session","note":"A second session receives the same not-found response as a missing case."}

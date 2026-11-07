@@ -1,0 +1,19 @@
+{
+  "name": "@proofroute/server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.1.5",
+    "@fastify/helmet": "13.2.0",
+    "@fastify/static": "10.1.10",
+    "@proofroute/contracts": "0.1.0",
+    "fastify": "5.12.8",
+    "tldts": "7.4.19",
+    "zod": "4.6.7"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "catalogVersion": "2026-11-07.1",
+  "reviewedAt": "2026-11-07T21:52:00.000Z",
+  "employers": [
+    {
+      "id": "figma",
+      "name": "Figma",
+      "careersUrl": "https://www.figma.com/careers/",
+      "careersSnapshot": "On 2026-11-07 the public Figma careers page linked to job posts on https://boards.greenhouse.io/figma, including Distribution Partner Manager (job 5813967004). ProofRoute treats the Greenhouse board token figma as Figma's employer-linked route. This text is a reviewed snapshot. A check does not refetch the careers page. This is not a partnership, endorsement, or statement about any recruiter.",
+      "board": {
+        "provider": "greenhouse",
+        "token": "figma",
+        "apiHost": "boards-api.greenhouse.io",
+        "publicHost": "boards.greenhouse.io"
+      },
+      "knownDomains": ["figma.com"],
+      "verificationContact": null,
+      "provenance": {
+        "careersPage": "https://www.figma.com/careers/",
+        "observedLink": "https://boards.greenhouse.io/figma/jobs/5813967004?gh_jid=5813967004",
+        "seedListingRechecked": "https://boards-api.greenhouse.io/v1/boards/figma/jobs/6143238004",
+        "seedListingTitle": "Software Engineer Intern (Summer 2027)",
+        "seedListingId": "6143238004",
+        "checkedAt": "2026-11-07T21:52:00.000Z",
+        "note": "The Greenhouse API absolute_url host was boards.greenhouse.io. The earlier TRD seed used job-boards.greenhouse.io. ProofRoute recommends only the host returned by the API after an allowlist check."
+      }
+    }
+  ]
+}

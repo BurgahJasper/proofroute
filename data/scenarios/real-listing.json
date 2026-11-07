@@ -1,0 +1,10 @@
+{
+  "id": "scn-real-listing",
+  "title": "Real listing, unverified sender",
+  "banner": "Synthetic message; public listing data; no employer affiliation.",
+  "employerId": "figma",
+  "jobId": "6143238004",
+  "whatItShows": "A published role can be found while the sender stays unverified.",
+  "text": "From: Avery Chen <avery.chen@recruiting.invalid>\nSubject: Software Engineer Intern (Summer 2027) — Figma\n\nHi Jordan,\n\nI am Avery Chen, a recruiter working on Figma's Software Engineer Intern (Summer 2027) opening. The public requisition is 6143238004. I can hold an interview slot if you reply to this thread and send your resume here.\n\nPlease do not apply through the careers site until I confirm your materials.\n\n— Avery Chen\navery.chen@recruiting.invalid\n",
+  "followUpText": "One more step before we schedule you: pay $189 to the equipment vendor at pay.equipment-desk.invalid so we can ship your laptop, and reply with the login code I just texted.\n"
+}

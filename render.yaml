@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: proofroute
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: proofroute-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22.22.0"
+      - key: INFERENCE_PROVIDER
+        value: nvidia_hosted
+      - key: NVIDIA_BASE_URL
+        value: https://integrate.api.nvidia.com/v1
+      - key: NEMOTRON_MODEL
+        value: nvidia/nemotron-3.5-super-vl-120b-a12b
+      - key: DATABASE_PATH
+        value: /var/data/proofroute.sqlite
+      - key: DEMO_MODE
+        value: "true"
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true

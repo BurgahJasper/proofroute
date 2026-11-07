@@ -1,0 +1,34 @@
+{
+  "ranAt": "2026-11-07T22:29:52.489Z",
+  "provider": "nvidia_hosted",
+  "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+  "baseUrl": "https://integrate.api.nvidia.com/v1",
+  "checks": {
+    "published_job": {
+      "status": "pass",
+      "latencyMs": 244,
+      "title": "Software Engineer Intern (Summer 2027)",
+      "jobId": "6143238004",
+      "url": "https://boards.greenhouse.io/figma/jobs/6143238004?gh_jid=6143238004",
+      "detail": "employer-linked listing retrieved"
+    },
+    "text": {
+      "status": "pass",
+      "latencyMs": 432,
+      "httpStatus": 200,
+      "detail": "Hello from ProofRoute smoke test!"
+    },
+    "structured": {
+      "status": "pass",
+      "latencyMs": 444,
+      "httpStatus": 200,
+      "detail": "schema matched"
+    },
+    "tool_round_trip": {
+      "status": "pass",
+      "latencyMs": 807,
+      "httpStatus": 200,
+      "detail": "local_echo returned ping-proofroute"
+    }
+  }
+}
