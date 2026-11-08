@@ -187,7 +187,7 @@ export function CasePage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-6" ref={workspaceRef}>
+    <div className="case-page mx-auto" ref={workspaceRef}>
       <p className="sr-only" aria-live="polite">
         {announcement}
       </p>
@@ -356,7 +356,7 @@ function MessagePane({ text, quotes, activeQuote }: { text: string; quotes: stri
   );
   return (
     <>
-      <section className="order-3 hidden rounded-panel border border-line bg-surface p-4 md:block min-[1100px]:order-1">
+      <section className="reviewed-conversation order-3 hidden rounded-panel border border-line bg-surface p-4 md:block min-[1100px]:order-1">
         <h2 className="text-sm font-medium">Reviewed conversation</h2>
         <div className="mt-3 text-sm">{body}</div>
       </section>

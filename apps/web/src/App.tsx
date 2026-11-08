@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, Outlet, Route, Routes, useLocation } from 'react-router';
+import { Link, NavLink, Outlet, Route, Routes, useLocation } from 'react-router';
 import { BriefPage } from './pages/BriefPage';
 import { CasePage } from './pages/CasePage';
 import { DemoPage } from './pages/DemoPage';
@@ -28,9 +28,9 @@ function Shell() {
             <Link className="inline-flex min-h-11 items-center px-2" to="/#how">
               How checks work
             </Link>
-            <Link className="inline-flex min-h-11 items-center px-2" to="/demo">
+            <NavLink className="inline-flex min-h-11 items-center px-2" to="/demo">
               Samples
-            </Link>
+            </NavLink>
             <button type="button" className="motion-control" aria-pressed={reduceMotion} onClick={toggleMotion}>
               {reduceMotion ? 'Motion reduced' : 'Reduce motion'}
             </button>

@@ -25,9 +25,9 @@ export function BriefPage() {
 
   return (
     <div className="brief-sheet mx-auto max-w-3xl">
-      <Link className="text-sm underline" to={`/cases/${caseId}`}>
+      <div className="brief-masthead"><p>ProofRoute / Evidence brief</p><Link className="text-sm underline" to={`/cases/${caseId}`}>
         Back to the evidence
-      </Link>
+      </Link></div>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}
       <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
         {assessment ? <ModeBadge mode={assessment.sourceMode} /> : <span>{snapshot ? 'Live' : 'Loading'}</span>}
