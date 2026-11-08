@@ -15,10 +15,22 @@ export function BriefPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    setSnapshot(null);
+    setError('');
+    const refresh = async () => {
+      const next = await getCase(caseId);
+      if (stopped) return;
+      setSnapshot(next);
+      if (next.run && ['queued', 'running'].includes(next.run.status)) {
+        timer = setTimeout(() => { void refresh().catch(() => undefined); }, 1500);
+      }
+    };
     void ensureSession()
-      .then(() => getCase(caseId))
-      .then(setSnapshot)
+      .then(refresh)
       .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'The brief could not be opened.'));
+    return () => { stopped = true; clearTimeout(timer); };
   }, [caseId]);
 
   const assessment = snapshot?.assessment;
@@ -27,6 +39,12 @@ export function BriefPage() {
   const draft = assessment
     ? `${assessment.verificationDraft}${includeSender && sender ? ` Sender address as reviewed: ${sender}.` : ''}`
     : '';
+
+  if (!assessment) return <div className="brief-sheet mx-auto max-w-3xl" ref={root}>
+    <div className="brief-masthead"><p>ProofRoute / Evidence brief</p><Link className="text-sm underline" to={`/cases/${caseId}`}>Back to the evidence</Link></div>
+    <h1 className="mt-2 font-editorial text-4xl leading-tight">{error ? 'The brief could not open' : snapshot?.run && ['queued', 'running'].includes(snapshot.run.status) ? 'The check is still running' : snapshot ? 'No completed check yet' : 'Opening your evidence'}</h1>
+    <p className="mt-4 text-sm text-muted" role="status">{error || (snapshot?.run && ['queued', 'running'].includes(snapshot.run.status) ? 'Your brief will appear here when the check finishes.' : 'Return to the evidence to run or review this check.')}</p>
+  </div>;
 
   return (
     <div className="brief-sheet mx-auto max-w-3xl" ref={root}>
