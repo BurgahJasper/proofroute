@@ -223,7 +223,9 @@ export function reduceAssessment(input: PolicyInput): AssessmentDraft {
 
   const reasons: string[] = [];
   if (recommendedAction === 'pause_sensitive_action') {
-    reasons.push(`Pause before sharing ${input.risks.map((risk) => risk.label).join(' or ')}.`);
+    const requestLabels = { password: 'passwords', otp: 'login codes', payment: 'payment', check_forwarding: 'check forwarding', sensitive_identifier: 'sensitive personal details' };
+    const distinctRequests = [...new Set(input.risks.map((risk) => requestLabels[risk.category]))];
+    reasons.push(`Pause requests for ${new Intl.ListFormat('en', { style: 'long', type: 'disjunction' }).format(distinctRequests)}.`);
   }
   if (input.listing?.found) {
     reasons.push('Listing found on the employer-linked job board. This does not verify the sender.');
@@ -264,7 +266,7 @@ export function reduceAssessment(input: PolicyInput): AssessmentDraft {
   ].join(' ');
 
   const answered = findings.filter((finding) => finding.status === 'supported' || finding.status === 'contradicted').length;
-  const riskLabels = input.risks.map((risk) => risk.label);
+  const riskLabels = [...new Set(input.risks.map((risk) => risk.label))];
   const changeSummary = input.previous
     ? {
         actionChanged: input.previous.recommendedAction !== recommendedAction,

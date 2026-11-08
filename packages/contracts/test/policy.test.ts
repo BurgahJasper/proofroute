@@ -157,3 +157,9 @@ test('matching company headers never clear a fictional equipment-payment request
     assert.equal(result.findings.find(f => f.claimKey === 'sender')?.status, 'unresolved');
   }
 });
+
+test('repeated conversation risks produce one readable request summary', () => {
+  const risks = detectRisks('Send a $200 equipment payment. Share your login code.');
+  const result = reduceAssessment(base({ risks: [...risks, ...risks] }));
+  assert.equal(result.reasons[0], 'Pause requests for login codes or payment.');
+});
