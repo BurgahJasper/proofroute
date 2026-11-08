@@ -241,11 +241,11 @@ export function CasePage() {
         </p>
       ) : null}
 
-      {assessment ? <DecisionChange assessment={assessment} previous={snapshot?.previousAssessment} /> : null}
-      {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
       <div className="case-workspace mt-6" aria-busy={running}>
+        <section className="case-evidence" aria-label="Evidence">
+      {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
         <MessagePane text={message} quotes={quotes} activeQuote={tracedQuote || assessment?.findings.find(item => item.claimKey === tracedKey)?.inputSpan?.quote} />
-        <section className="order-2" aria-label="Evidence">
+
           <div className="evidence-section-heading">
             <h2 className="text-lg font-semibold">What the sources show</h2>
             {assessment ? (
@@ -293,8 +293,10 @@ export function CasePage() {
             ))}
           </div>
         </section>
-        <aside className="order-1 min-[1100px]:order-3">
+        <aside className="case-sidebar">
           <NextStep assessment={assessment} caseId={caseId} loading={loading} providerConfigured={Boolean(snapshot?.providerConfigured)} />
+      {assessment ? <DecisionChange assessment={assessment} previous={snapshot?.previousAssessment} /> : null}
+
           <form
             className="follow-up-card mt-4 rounded-panel border border-line bg-surface p-4"
             onSubmit={(event) => {
@@ -355,16 +357,10 @@ function MessagePane({ text, quotes, activeQuote }: { text: string; quotes: stri
     </p>
   );
   return (
-    <>
-      <section className="reviewed-conversation order-3 hidden rounded-panel border border-line bg-surface p-4 md:block min-[1100px]:order-1">
-        <h2 className="text-sm font-medium">Reviewed conversation</h2>
-        <div className="mt-3 text-sm">{body}</div>
-      </section>
-      <details className="order-4 rounded-panel border border-line bg-surface p-4 md:hidden">
-        <summary className="min-h-11 cursor-pointer font-medium">Reviewed conversation</summary>
-        <div className="mt-3 text-sm">{body}</div>
-      </details>
-    </>
+    <details className="reviewed-transcript">
+      <summary>Read the full reviewed conversation <span aria-hidden="true">+</span></summary>
+      <div>{body}</div>
+    </details>
   );
 }
 

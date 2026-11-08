@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import type { Assessment, Finding } from '../api';
@@ -23,12 +23,12 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
       {path.map((key, index) => {
         const finding = assessment.findings.find(item => item.claimKey === key);
         const risk = key === 'request' && assessment.recommendedAction === 'pause_sensitive_action';
-        return <div className="map-stop" key={key}>
+        return <Fragment key={key}>
           {index > 0 ? <span className={`map-connector ${key === 'sender' || key === 'request' ? 'uncertain' : ''}`} aria-hidden="true" /> : null}
-          <button className="map-node" data-active={activeKey === key} disabled={!finding} onMouseEnter={() => onTrace(key)} onMouseLeave={() => onTrace(null)} onFocus={() => onTrace(key)} onBlur={() => onTrace(null)} onClick={() => finding && onSelect(finding)} aria-label={`${labels[key]}: ${risk ? 'risk detected' : finding?.status ?? 'unresolved'}. Inspect evidence.`}>
+          <div className="map-stop"><button type="button" className="map-node" data-active={activeKey === key} disabled={!finding} onMouseEnter={() => onTrace(key)} onMouseLeave={() => onTrace(null)} onFocus={() => onTrace(key)} onBlur={() => onTrace(null)} onClick={() => finding && onSelect(finding)} aria-label={`${labels[key]}: ${risk ? 'risk detected' : finding?.status ?? 'unresolved'}. Inspect evidence.`}>
             <span className="map-symbol" data-status={risk ? 'contradicted' : finding?.status}>{risk ? '!' : finding?.status === 'supported' ? '✓' : finding?.status === 'contradicted' ? '!' : '?'}</span><strong>{labels[key]}</strong><span>{risk ? 'Risk detected' : finding?.status ?? 'Unresolved'}</span>
-          </button>
-        </div>;
+          </button></div>
+        </Fragment>;
       })}
       </div>
       {pathIndex === 0 ? <div className="authority-gap"><span aria-hidden="true">↛</span><p><strong>The missing connection</strong>A published vacancy does not prove this sender represents the employer.</p></div> : null}
@@ -40,7 +40,7 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
 export function DecisionChange({ assessment, previous }: { assessment: Assessment; previous?: Assessment | null }) {
   const change = assessment.changeSummary;
   if (!change) return null;
-  return <section className="decision-change" aria-labelledby="change-title">
+  return <section className="decision-change" data-action-changed={change.actionChanged} aria-labelledby="change-title">
     <div><p className="eyebrow">New message · Version {assessment.version}</p><h2 id="change-title">{change.actionChanged ? 'One new request changes the next step.' : 'New information. Same careful approach.'}</h2></div>
     <div className="change-comparison"><div><span>Before</span><p>{actions[change.previousAction ?? ''] ?? 'No previous recommendation'}</p></div><span className="change-arrow" aria-hidden="true">→</span><div><span>Now</span><p>{actions[assessment.recommendedAction] ?? assessment.headline}</p></div></div>
     <p>{change.headline}</p>
