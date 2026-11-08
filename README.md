@@ -77,3 +77,8 @@ P0 uses Figma only. On 2026-11-07 the public careers page linked to `boards.gree
 ## Layout
 
 `apps/web` is the React UI. `apps/server` is Fastify. `packages/contracts` holds the shared policy and redaction. `data/employers.json` is the reviewed catalog.
+
+### Email import
+Choose **Upload an email** to open an `.eml` file locally (2 MB maximum), or keep using paste. MIME plain text and HTML-only mail are supported; HTML is converted to text without rendering, scripts, remote images, or network requests. Only From, Reply-To, Subject, Date and the message body enter the editable review. Attachments are excluded. Header values are unverified claims, not authentication results. Existing redaction and synthetic-data confirmation still apply.
+
+Try `apps/web/public/samples/fictional-recruiting.eml`: a never-sent, explicitly fictional display-name impersonation example using reserved `.example` sender domains. The public demo also links to this sample.

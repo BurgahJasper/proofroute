@@ -26,6 +26,33 @@ export function HomePage() {
   const [attested, setAttested] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [inputKind, setInputKind] = useState<'paste' | 'email'>('paste');
+  const [importing, setImporting] = useState(false);
+  const [importNote, setImportNote] = useState('');
+  const importVersion = useRef(0);
+
+  async function importEmail(file?: File) {
+    if (!file) return;
+    const version = ++importVersion.current;
+    setImporting(true);
+    setError('');
+    try {
+      const { parseEmailFile } = await import('../email-import');
+      const result = await parseEmailFile(file);
+      if (version !== importVersion.current) return;
+      setText(result.text);
+      setScenarioId(undefined);
+      setBanner('');
+      setAttested(false);
+      setSummary([]);
+      setStep('paste');
+      setImportNote(`Email opened locally. ${result.attachmentCount ? `${result.attachmentCount} attachment(s) excluded. ` : ''}Sender headers are claims, not proof of identity.`);
+    } catch (reason) {
+      if (version === importVersion.current) setError(reason instanceof Error ? reason.message : 'The email could not be opened.');
+    } finally {
+      if (version === importVersion.current) setImporting(false);
+    }
+  }
 
   useEffect(() => {
     void (async () => {
@@ -55,6 +82,10 @@ export function HomePage() {
   );
 
   function applyScenario(scenario: Scenario) {
+    importVersion.current++;
+    setImporting(false);
+    setImportNote('');
+    setInputKind('paste');
     setText(scenario.text);
     setEmployerId(scenario.employerId ?? '');
     setRoleReference(scenario.jobId);
@@ -70,8 +101,9 @@ export function HomePage() {
   const tooLong = text.length > 20_000;
 
   function review() {
+    if (importing) return;
     if (!text.trim()) {
-      setError('Paste a message before reviewing it.');
+      setError('Add a message before reviewing it.');
       return;
     }
     if (tooLong) {
@@ -149,7 +181,24 @@ export function HomePage() {
       >
         <div className="intake-heading"><div><p className="eyebrow">Your evidence desk</p><h2>{step === 'paste' ? 'Start with the message.' : 'Review before you share.'}</h2></div><span className="step-count">{step === 'paste' ? '01' : '02'}<span> / 02</span></span></div>
         <div className="intake-stepper" aria-label="Message review progress"><span className={step === 'paste' ? 'active' : 'complete'}>1. Add a message</span><span className={step === 'review' ? 'active' : ''}>2. Review & check</span></div>
-        {step === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
+        {step === 'paste' ? <>
+          <div className="input-choice" role="group" aria-label="Choose how to add your message">
+            <button type="button" aria-pressed={inputKind === 'paste'} onClick={() => { importVersion.current++; setImporting(false); setInputKind('paste'); setError(''); }}>Paste a message</button>
+            <button type="button" aria-pressed={inputKind === 'email'} onClick={() => { setInputKind('email'); setError(''); }}>Upload an email</button>
+          </div>
+          {inputKind === 'email' ? <div className="email-import">
+            <p className="eyebrow">An email. The same evidence check.</p>
+            <h3>Bring the conversation.</h3>
+            <p>Open an .eml file from your mail app. Read locally, then review what you share.</p>
+            <label className="email-file-label" htmlFor="email-file">Choose an email file <span aria-hidden="true">↗</span></label>
+            <input id="email-file" type="file" accept=".eml,message/rfc822" disabled={importing} onChange={event => { void importEmail(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
+            <p className="email-import-help">Up to 2 MB · Attachments and remote images are not opened.</p>
+            <a href="/samples/fictional-recruiting.eml" download>Download a fictional email to try <span aria-hidden="true">↓</span></a>
+          </div> : null}
+        </> : null}
+        {importing ? <p role="status" className="import-status">Opening email locally…</p> : null}
+        {importNote ? <p role="status" className="import-status">{importNote}</p> : null}
+        {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
         {step === 'review' ? <p className="mb-3 text-sm text-supported" role="status">Personal details have been checked for redaction. Review the text below before sending it.</p> : null}
         <label className="block text-sm font-medium" htmlFor="offer">
@@ -157,11 +206,14 @@ export function HomePage() {
         </label>
         <textarea
           id="offer"
+          disabled={importing}
           className="message-input mt-2 w-full rounded-control border border-line bg-paper p-4"
           value={text}
           onChange={(event) => {
             setText(event.target.value);
             setAttested(false);
+            setScenarioId(undefined);
+            setBanner('');
             if (step === 'review') setStep('paste');
           }}
           maxLength={20000}
@@ -222,7 +274,7 @@ export function HomePage() {
         ) : null}
         <div className="intake-actions">
           {step === 'paste' ? (
-            <button type="submit" className="primary-button" disabled={!text.trim() || tooLong}>
+            <button type="submit" className="primary-button" disabled={!text.trim() || tooLong || importing}>
               Review this message <span aria-hidden="true">↗</span>
             </button>
           ) : (

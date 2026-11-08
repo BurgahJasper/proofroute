@@ -15,7 +15,7 @@
     "build": "npm run build -w @proofroute/web",
     "start": "tsx scripts/start.ts",
     "typecheck": "tsc -p packages/contracts/tsconfig.json --noEmit && tsc -p apps/server/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
-    "test": "tsx --test --test-concurrency=1 packages/contracts/test/*.test.ts apps/server/test/*.test.ts",
+    "test": "tsx --test --test-concurrency=1 packages/contracts/test/*.test.ts apps/server/test/*.test.ts apps/web/test/*.test.ts",
     "test:e2e": "tsx --test --test-concurrency=1 apps/server/test/e2e.test.ts",
     "smoke:providers": "tsx scripts/smoke-providers.ts",
     "eval:heldout": "tsx scripts/eval-heldout.ts",

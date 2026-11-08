@@ -495,3 +495,17 @@ main:focus { outline: none; }
   .brief-masthead { align-items: baseline; }
 }
 @media print { .brief-masthead a { display: none; } .brief-sheet { margin: 0; padding: 0; border: 0; } }
+
+.input-choice { display:flex; border-bottom:1px solid #d7dcd5; margin:18px 0; gap:22px; }
+.input-choice button { min-height:44px; border-bottom:2px solid transparent; font-size:13px; color:#65716a; padding:8px 0; }
+.input-choice button[aria-pressed="true"] { border-color:#265c49; color:#173a2c; font-weight:600; }
+.email-import { padding:20px; background:#f1f4ed; border:1px solid #d5dfd0; margin-bottom:18px; }
+.email-import h3 { font-family:Newsreader, Georgia, serif; font-size:25px; margin:8px 0; }
+.email-import p { font-size:13px; line-height:1.65; }
+.email-import .eyebrow { font-size:9px; }
+.email-file-label { display:block; font-size:13px; font-weight:600; margin-top:16px; }
+.email-import input[type=file] { display:block; max-width:100%; width:100%; margin-top:8px; font-size:12px; }
+.email-import input::file-selector-button { min-height:40px; padding:8px 13px; margin-right:10px; background:#fff; border:1px solid #9aaa9e; color:#173a2c; cursor:pointer; }
+.email-import .email-import-help { margin:10px 0; font-size:11px; color:#65716a; }
+.email-import a { display:inline-block; font-size:12px; text-decoration:underline; text-underline-offset:3px; padding-block:8px; }
+.import-status { border-left:2px solid #39644b; padding:8px 12px; margin-bottom:14px; color:#395541; font-size:12px; line-height:1.6; }
