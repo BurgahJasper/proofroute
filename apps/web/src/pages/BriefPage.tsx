@@ -124,14 +124,7 @@ export function BriefPage() {
         <a className="inline-flex min-h-11 items-center underline" href={exportHref(caseId, 'json')}>
           Download JSON
         </a>
-        <button
-          type="button"
-          className="brief-print-button"
-          onClick={() => window.print()}
-          disabled={!assessment}
-        >
-          Print / Save PDF
-        </button>
+
       </div>
     </div>
   );

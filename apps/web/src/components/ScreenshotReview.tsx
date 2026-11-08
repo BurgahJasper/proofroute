@@ -5,8 +5,9 @@ export function ScreenshotReview({caseId,quotes,activeQuote}:{caseId:string;quot
  const imageRef=useRef<HTMLDivElement>(null);const {reduceMotion}=useUi();
  const [evidence,setEvidence]=useState<ScreenshotEvidence|null>(null);const [selected,setSelected]=useState('');
  useEffect(()=>{let active=true;void loadScreenshot(caseId).then(x=>{if(active)setEvidence(x);}).catch(()=>{});return()=>{active=false;};},[caseId]);
+ useEffect(()=>{setSelected('');},[activeQuote]);
  if(!evidence)return null;
- const quote=activeQuote||selected||quotes[0]||'';const hits=matchQuote(evidence.lines,quote,true);
+ const quote=selected||activeQuote||quotes[0]||'';const hits=matchQuote(evidence.lines,quote,true);
  return <section className="screenshot-evidence"><div className="screenshot-heading"><div><p className="eyebrow">Your source image · On this device</p><h2>See the evidence in context.</h2></div><button type="button" onClick={()=>{void saveScreenshot(caseId,null);setEvidence(null);}}>Remove image</button></div>
  <p>Select a quote to highlight it. Image kept on this device for 24 hours.</p>
  {quotes.length?<div className="image-quote-choices">{quotes.map(q=><button type="button" key={q} aria-pressed={quote===q} onClick={()=>{setSelected(q);imageRef.current?.scrollIntoView({behavior:reduceMotion?'instant':'smooth',block:'center'});}}>“{q}”</button>)}</div>:<p>No quoted text has been linked to this image.</p>}
