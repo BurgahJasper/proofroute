@@ -38,7 +38,14 @@ export function validateRequests(raw: unknown, messages: Message[]): RequestTrac
     const prefix = conversationText(messages.filter(m => m.version < r.messageVersion));
     const start = (prefix ? prefix.length + 2 : 0) + `Message ${r.messageVersion}\n`.length + message.reviewed_text.indexOf(r.quote);
     if (text.slice(start, start + r.quote.length) !== r.quote) return [];
-    return [{ ...r, label: labels[r.category], start, end: start + r.quote.length, origin: 'model' as const }];
+    // Keep the category consistent with a grounded money-transfer request even
+    // when the model assigns another enum value. Context must mention funds;
+    // transferring documents or source code alone is not payment evidence.
+    const moneyTransfer = /\b(?:transfer|wire|remit|pay)\b/i.test(r.quote)
+      && /\b(?:funds|money|cash|dollars|balance)\b/i.test(r.asset)
+      && /\b(?:funds|money|cash|dollars)\b/i.test(text.slice(0, start + r.quote.length));
+    const category = moneyTransfer ? 'payment' : r.category;
+    return [{ ...r, category, label: labels[category], start, end: start + r.quote.length, origin: 'model' as const }];
   });
 }
 

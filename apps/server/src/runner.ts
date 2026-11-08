@@ -94,6 +94,7 @@ function systemPrompt(): string {
     'Read all numbered messages as one conversation. Identify sensitive requests even when phrased indirectly or across messages.',
     'requests must quote an actual request verbatim from its messageVersion. Include who asks, the action, asset, and destination; use Not established for unknown details.',
     'Only include requests for the APPLICANT to take a sensitive action: transfer/pay money, deposit/forward a check, or disclose credentials or sensitive identifiers. A sender offering to pay or send funds is context, NOT a request for the applicant to act. Do not flag it by itself.',
+    'Choose categories by the requested asset: payment for money transfers or fees; check_forwarding for depositing or forwarding checks; password for passwords; otp for one-time authentication codes; sensitive_identifier only for identity or banking identifiers such as SSN, passport, routing or account numbers. Transferring funds is payment, not sensitive_identifier.',
     'For a sequence where the sender offers funds and later asks the applicant to move some elsewhere, quote and attribute the transfer instruction to the LATER message. Do not attribute the request to the earlier offer of funds.',
     'Do not treat a protective warning such as Never share your login code as a request to share it. A harmless later reply does not cancel an earlier request.',
     'Return only the requested JSON.',

@@ -22,6 +22,11 @@ test('cross-message requests require real quotes in the named message and surviv
   assert.equal(validateRequests([{ ...request, messageVersion: 1 }], messages).length, 0);
   assert.equal(validateRequests([{ ...request, quote: 'Invented evidence' }], messages).length, 0);
   assert.equal(validateRequests([{ ...request, category: 'safe' }], messages).length, 0);
+  const mislabeled = validateRequests([{ ...request, category: 'sensitive_identifier', asset: 'funds' }], messages);
+  assert.equal(mislabeled[0].category, 'payment');
+  assert.equal(mislabeled[0].label, 'payment');
+  const documents = [{ version: 1, reviewed_text: 'Transfer the source code to the repository.' }];
+  assert.equal(validateRequests([{ ...request, messageVersion: 1, quote: documents[0].reviewed_text, category: 'sensitive_identifier', asset: 'source code' }], documents)[0].category, 'sensitive_identifier', 'do not infer money from transfer alone');
 });
 
 test('protective warnings are distinct from requests, including mixed instructions', () => {

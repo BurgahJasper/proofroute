@@ -45,6 +45,7 @@ try {
     const a = await run(id, expectedVersion === 1 ? 'Indirect transfer request' : 'Harmless reply retains pause');
     assert.equal(a.recommendedAction, 'pause_sensitive_action');
     assert.equal(a.conversation.firstSensitiveVersion, 2);
+    assert.ok(a.conversation.requests.some((request: { category: string; messageVersion: number }) => request.messageVersion === 2 && request.category === 'payment'));
   }
   const warning = await create('Synthetic message: Never share your login code with anyone. You may read the Software Engineer Intern (Summer 2027) listing in San Francisco on the Figma careers site.');
   const benign = await run(warning, 'Protective warning');
