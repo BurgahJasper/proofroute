@@ -1,8 +1,14 @@
 export interface ImageLine { text: string; bbox: { x0:number; y0:number; x1:number; y1:number } }
 export interface ScreenshotEvidence { image:string; width:number; height:number; lines:ImageLine[]; confidence:number; createdAt:number }
 const normalize=(s:string)=>s.normalize('NFKC').toLowerCase().replace(/[^a-z0-9]/g,'');
-export function matchQuote(lines:ImageLine[],quote:string):number[] {
- const needle=normalize(quote);if(needle.length<12)return [];
+export function matchQuote(lines:ImageLine[],quote:string,allowShort=false):number[] {
+ const needle=normalize(quote);
+ if(needle.length<12){
+  if(!allowShort || needle.length<4)return [];
+  const words=(s:string)=>s.normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  const phrase=` ${words(quote)} `;
+  return lines.flatMap((line,index)=>` ${words(line.text)} `.includes(phrase)?[index]:[]);
+ }
  const chunks=lines.map(l=>normalize(l.text));const joined=chunks.join('');const start=joined.indexOf(needle);if(start<0)return [];
  let offset=0;return chunks.flatMap((text,index)=>{const hit=offset<start+needle.length && offset+text.length>start;offset+=text.length;return hit?[index]:[];});
 }

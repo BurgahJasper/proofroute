@@ -55,7 +55,8 @@ export function detectRisks(text: string): RiskHit[] {
       // Only suppress standalone protective instructions. A second request in the
       // same sentence ("never share it, but send it here") must still be reviewed.
       const protective = /^(?:never|do not|don't)\s+(?:send|share|provide|give|enter|pay|wire|transfer|upload)\b|^we\s+(?:will\s+)?never\s+ask\b/i.test(tail);
-      return !(protective && !/\b(?:but|however|except|instead|then|also|and)\b|[,;:\u2014\u2013]/i.test(tail));
+      const noRequirement = /^no\s+(?:payment|login code|verification code|password|fee)(?:\s+or\s+(?:payment|login code|verification code|password|fee))*\s+(?:is|are)\s+(?:needed|required)(?:\s+to apply)?$/i.test(tail);
+      return !(noRequirement || (protective && !/\b(?:but|however|except|instead|then|also|and)\b|[,;:\u2014\u2013]/i.test(tail)));
     });
     if (!match || match.index < 0) continue;
     if (seen.has(rule.category)) continue;

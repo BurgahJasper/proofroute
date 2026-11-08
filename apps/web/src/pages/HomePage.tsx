@@ -42,7 +42,7 @@ export function HomePage() {
       const { recognizeScreenshot } = await import('../screenshot');
       const result = await recognizeScreenshot(file, progress => { if (version === importVersion.current) setOcrProgress(progress); });
       if(version !== importVersion.current) return;
-      setText(result.text); setScreenshot(result.evidence); setScenarioId(undefined); setBanner(''); setAttested(false); setSummary([]); setStep('paste');
+      setText(result.text); setRoleReference(''); setScreenshot(result.evidence); setScenarioId(undefined); setBanner(''); setAttested(false); setSummary([]); setStep('paste');
       setImportNote(`Text extracted locally. OCR confidence ${Math.round(result.evidence.confidence)}% describes recognition quality, not message trustworthiness. Correct any mistakes before review.`);
     } catch(reason) { if(version === importVersion.current) setError(reason instanceof Error ? reason.message : 'The screenshot could not be read.'); }
     finally { if(version === importVersion.current) setImporting(false); }
@@ -60,6 +60,7 @@ export function HomePage() {
       const result = await parseEmailFile(file);
       if (version !== importVersion.current) return;
       setText(result.text);
+      setRoleReference('');
       setScenarioId(undefined);
       setBanner('');
       setAttested(false);
@@ -83,8 +84,39 @@ export function HomePage() {
       const requested = params.get('scenario');
       const chosen = scenarioRows.find((item) => item.id === requested) ?? null;
       if (chosen) applyScenario(chosen);
+      const sampleImg = params.get('sampleImage');
+      if (sampleImg === 'request' || sampleImg === 'benign') {
+        setInputKind('image');
+        void loadSampleImage(sampleImg === 'benign' ? '/samples/recruiting-benign.png' : '/samples/recruiting-request.png');
+      }
     })().catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'The app could not start.'));
   }, [params]);
+
+  async function loadSampleImage(url: string) {
+    if (importing) return;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Could not load the sample image.');
+      const blob = await response.blob();
+      const name = url.split('/').pop() || 'sample.png';
+      await importImage(new File([blob], name, { type: blob.type || 'image/png' }));
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'The sample screenshot could not be loaded.');
+    }
+  }
+
+  async function loadSampleEmail(url = '/samples/fictional-recruiting.eml') {
+    if (importing) return;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Could not load the sample email.');
+      const blob = await response.blob();
+      const name = url.split('/').pop() || 'sample.eml';
+      await importEmail(new File([blob], name, { type: 'message/rfc822' }));
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'The sample email could not be loaded.');
+    }
+  }
 
   useGSAP(
     () => {
@@ -211,7 +243,10 @@ export function HomePage() {
             <input id="image-file" type="file" accept="image/png,image/jpeg,image/webp" disabled={importing} onChange={event=>{void importImage(event.currentTarget.files?.[0]);event.currentTarget.value='';}} />
             <label htmlFor="image-file"><strong>Choose a screenshot</strong><span>PNG, JPEG or WebP · Up to 8 MB</span></label></div>
             <p className="email-import-help">Text extraction runs on your device. English screenshots work best.</p>
-            <a href="/samples/recruiting-request.png" download>Download a fictional screenshot ↓</a></div> : null}
+            <div className="sample-import-actions">
+              <button type="button" className="sample-inline-trigger" disabled={importing} onClick={() => void loadSampleImage('/samples/recruiting-request.png')}>Try a sample screenshot <span aria-hidden="true">↗</span></button>
+              <a href="/samples/recruiting-request.png" download>Download a fictional screenshot ↓</a>
+            </div></div> : null}
           {inputKind === 'email'  ? <div className="email-import">
             <div className="email-picker">
               <input id="email-file" type="file" aria-label="Choose an email file" accept=".eml,message/rfc822" disabled={importing} onChange={event => { void importEmail(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
@@ -222,7 +257,10 @@ export function HomePage() {
               </label>
             </div>
             <p className="email-import-help">Opened on your device. You review the text before sharing.</p>
-            <a href="/samples/fictional-recruiting.eml" download>Download a fictional email to try <span aria-hidden="true">↓</span></a>
+            <div className="sample-import-actions">
+              <button type="button" className="sample-inline-trigger" disabled={importing} onClick={() => void loadSampleEmail('/samples/fictional-recruiting.eml')}>Try a sample email <span aria-hidden="true">↗</span></button>
+              <a href="/samples/fictional-recruiting.eml" download>Download a fictional email to try <span aria-hidden="true">↓</span></a>
+            </div>
           </div> : null}
         </> : null}
         {importing ? <p role="status" className="import-status">{inputKind === 'image' ? `Reading screenshot locally… ${Math.round(ocrProgress*100)}%` : 'Opening email locally…'}</p> : null}
@@ -245,7 +283,7 @@ export function HomePage() {
               )) : (
                 <span className="privacy-pill">✓ 0 raw credentials, phones, or SSNs detected</span>
               )}
-              {screenshot ? <span className="privacy-pill">✓ Source image kept on device (IndexedDB · 24h expiry)</span> : null}
+              {screenshot ? <span className="privacy-pill">✓ Source image stays on this device for 24 hours</span> : null}
             </div>
           </div>
         ) : null}

@@ -30,7 +30,9 @@ test('cross-message requests require real quotes in the named message and surviv
 });
 
 test('protective warnings are distinct from requests, including mixed instructions', () => {
-  for (const warning of ['Never share your login code with anyone.', 'Reminder: Never share your login code with anyone.', 'Do not send your password.', 'We will never ask for a processing fee.']) assert.equal(detectRisks(warning).length, 0, warning);
+  for (const warning of ['Never share your login code with anyone.', 'Reminder: Never share your login code with anyone.', 'Do not send your password.', 'We will never ask for a processing fee.', 'No payment or login code is needed to apply.', 'No verification code is required.']) assert.equal(detectRisks(warning).length, 0, warning);
+  assert.ok(detectRisks('No payment or login code is needed to apply, but send your login code to me.').length);
+  assert.ok(detectRisks('No payment or login code is needed to apply. Send your login code here.').length);
   for (const risky of ['Never share your login code, but send it to me.', 'Never share your login code. Send your login code to me.', 'Never share your login code and transfer the equipment fee.', 'Never share your login code — send it to me.']) assert.ok(detectRisks(risky).length, risky);
   const risks = collectRequests([{ version: 1, reviewed_text: 'Send your login code.' }, { version: 2, reviewed_text: 'Thanks.' }], []);
   assert.equal(risks[0].messageVersion, 1);

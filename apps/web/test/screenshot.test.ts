@@ -21,3 +21,11 @@ test('screenshot file validation rejects unsupported and oversized uploads befor
  await assert.rejects(recognizeScreenshot(new File(['text'],'note.txt',{type:'text/plain'}),()=>{}),/PNG/);
  await assert.rejects(recognizeScreenshot(new File([new Uint8Array(8*1024*1024+1)],'large.png',{type:'image/png'}),()=>{}),/8 MB/);
 });
+
+test('explicit source findings locate short employer names and job IDs as whole tokens',()=>{
+ const lines=['Figma internship','figma-careers.example','6143238004','161432380040','figmatic'].map(text=>({text,bbox:{x0:0,y0:0,x1:100,y1:20}}));
+ assert.deepEqual(matchQuote(lines,'Figma',true),[0,1]);
+ assert.deepEqual(matchQuote(lines,'6143238004',true),[2]);
+ assert.deepEqual(matchQuote(lines,'fig',true),[]);
+ assert.deepEqual(matchQuote(lines,'Figma'),[]);
+});

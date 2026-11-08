@@ -27,7 +27,7 @@ export function DemoPage() {
       <p className="mt-5 max-w-prose text-muted">Explore the gray areas of a recruiting conversation. Start with a sample, inspect the evidence, then add a follow-up to see what changes.</p>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}
       {!scenarios.length && !error ? <p className="sample-loading" role="status">Opening the case index...</p> : null}
-      <section className="screenshot-samples"><p className="eyebrow">Try a source image</p><h2>Start with a screenshot.</h2><p>Download a fictional conversation, then choose Screenshot on the home page. Review the extracted text before checking it.</p><div><a href="/samples/recruiting-request.png" download>Equipment request screenshot ↓</a><a href="/samples/recruiting-benign.png" download>Ordinary recruiting screenshot ↓</a></div></section>
+      <section className="screenshot-samples"><p className="eyebrow">Try a source image</p><h2>Start with a screenshot.</h2><p>Run local OCR directly in your browser with one click, or download a fictional conversation image to upload yourself.</p><div><Link to="/?sampleImage=request">Open equipment-request screenshot in OCR ↗</Link><Link to="/?sampleImage=benign">Open ordinary recruiting screenshot in OCR ↗</Link><a href="/samples/recruiting-request.png" download>Equipment request screenshot ↓</a><a href="/samples/recruiting-benign.png" download>Ordinary recruiting screenshot ↓</a></div></section>
       <ul className="sample-grid">
         {scenarios.map((scenario, index) => (
           <li key={scenario.id} className="sample-tile">
