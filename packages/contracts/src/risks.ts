@@ -42,7 +42,7 @@ const AMBIGUOUS =
   /\b(?:complete (?:your )?onboarding|onboarding (?:paperwork|portal|packet|documents)|identity documents)\b/i;
 
 const STEER_OFF =
-  /\b(?:do not|don't|dont)\s+apply\b|\bavoid the (?:public )?careers\b|\buntil I confirm your materials\b/i;
+  /\b(?:do not|don't|dont)\s+apply\b|\bavoid the (?:public )?careers\b|\buntil I confirm your materials\b|\b(?:continue|message|reach|contact|chat|text)\b[^.\n]{0,40}\b(?:whatsapp|telegram|signal|wechat)\b/i;
 
 export function detectRisks(text: string): RiskHit[] {
   const hits: RiskHit[] = [];

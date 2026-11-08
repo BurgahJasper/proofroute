@@ -19,3 +19,9 @@ test('positive consistency requires a known From domain and no conflicting Reply
  assert.equal(compare('From: x@figma.com\nReply-To: x@other.example',['figma.com']).consistent,false);
  assert.equal(compare('From: x@figma.com',[]).consistent,false);
 });
+
+test('detects off-channel messaging switches and SMS cues without authenticating headers',()=>{
+ const whatsapp=compare('[SMS / Text Message]\nCan we continue on WhatsApp with @figma_talent_desk.invalid?',['figma.com']);
+ assert.match(whatsapp.channelCue ?? '',/WhatsApp/);
+ assert.equal(whatsapp.consistent,false);
+});

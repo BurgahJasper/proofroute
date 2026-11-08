@@ -68,7 +68,7 @@ Fixture replay is labeled and does not call Greenhouse. Live, fixture, and cache
 
 ## Source limit
 
-P0 uses Figma only. On 2026-11-07 the public careers page linked to `boards.greenhouse.io/figma`, and Greenhouse job `6143238004` was Software Engineer Intern (Summer 2027). See `docs/source-catalog.md`. The server does not fetch arbitrary URLs. The careers page is a reviewed snapshot.
+The reviewed catalog (`2026-11-08.1`) covers three employers: **Figma**, **GitLab**, and **Cloudflare**. On 2026-11-07/08 their public careers pages linked to their respective Greenhouse boards (`figma`, `gitlab`, and `cloudflare`), including Figma job `6143238004` (Software Engineer Intern, Summer 2027). See `docs/source-catalog.md`. The server does not fetch arbitrary URLs. The careers page is a reviewed snapshot.
 
 ## Evaluation
 

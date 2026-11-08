@@ -227,10 +227,28 @@ export function HomePage() {
         </> : null}
         {importing ? <p role="status" className="import-status">{inputKind === 'image' ? `Reading screenshot locally… ${Math.round(ocrProgress*100)}%` : 'Opening email locally…'}</p> : null}
         {importNote ? <p role="status" className="import-status">{importNote}</p> : null}
-        {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
+        {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p>{scenarios.some(item => item.id === 'scn-sms-channel-shift') ? <button type="button" className="sample-start-secondary" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-sms-channel-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Or try an SMS to WhatsApp recruiting switch <span aria-hidden="true">↗</span></button> : null}</div> : null}
         {screenshot ? <div className="intake-image-preview"><img src={screenshot.image} alt="Screenshot selected for text extraction"/><p>The source image stays on this device. Only reviewed text is shared.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
-        {step === 'review' ? <p className="mb-3 text-sm text-supported" role="status">Personal details have been checked for redaction. Review the text below before sending it.</p> : null}
+        {step === 'review' ? (
+          <div className="privacy-shield" role="status">
+            <div className="privacy-shield-head">
+              <span className="eyebrow">Privacy shield · Local browser pass</span>
+              <span className="preview-label">{summary.length ? `${summary.reduce((acc, item) => acc + item.count, 0)} redacted` : 'Checked locally'}</span>
+            </div>
+            <p className="mt-1.5 text-sm text-supported">Personal details have been checked for redaction. Review the text below before sending it.</p>
+            <div className="privacy-pills">
+              {summary.length ? summary.map((item) => (
+                <span key={item.category} className="privacy-pill">
+                  ✓ Replaced {item.count} {item.category} {item.count === 1 ? 'value' : 'values'}
+                </span>
+              )) : (
+                <span className="privacy-pill">✓ 0 raw credentials, phones, or SSNs detected</span>
+              )}
+              {screenshot ? <span className="privacy-pill">✓ Source image kept on device (IndexedDB · 24h expiry)</span> : null}
+            </div>
+          </div>
+        ) : null}
         {inputKind === 'paste' || text ? <>
         <label className="block text-sm font-medium" htmlFor="offer">
           {step === 'review' ? 'Reviewed message' : 'Recruiting message'}

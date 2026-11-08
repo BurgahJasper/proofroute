@@ -99,13 +99,21 @@ export function BriefPage() {
       <p className="mt-2 max-w-prose">
         Share the downloaded brief if you want help. It records what was checked, what is unresolved, and the official route. It does not say the sender was verified, and it does not include an unredacted original.
       </p>
-      <div className="mt-4 flex flex-wrap gap-4">
+      <div className="mt-4 flex flex-wrap items-center gap-4">
         <a className="inline-flex min-h-11 items-center underline" href={exportHref(caseId, 'md')}>
           Download Markdown
         </a>
         <a className="inline-flex min-h-11 items-center underline" href={exportHref(caseId, 'json')}>
           Download JSON
         </a>
+        <button
+          type="button"
+          className="brief-print-button"
+          onClick={() => window.print()}
+          disabled={!assessment}
+        >
+          Print / Save PDF
+        </button>
       </div>
     </div>
   );

@@ -270,7 +270,7 @@ export function CasePage() {
           {assessment ? <EvidenceMap assessment={assessment} onSelect={setSelected} onTrace={(key) => { setTracedKey(key); setTracedQuote(''); }} activeKey={tracedKey} /> : <div className="investigation-wait" role="status"><div className="wait-orbit" aria-hidden="true"><span>?</span></div><h3>Building your Proof Path</h3><p>{STEPS[stage]} · Evidence appears after the checks finish.</p><span>No conclusion yet. A match will never verify the sender.</span></div>}
           {assessment?.candidateChoices?.length ? <section className="candidate-picker"><h3>Which published role did you mean?</h3><p>We could not establish one exact match. Choose a role to read its official listing, or keep the result unresolved.</p>{assessment.candidateChoices.map(candidate => <button type="button" key={candidate.jobId} disabled={busy || running} onClick={() => void recheck(candidate.jobId)}><strong>{candidate.title}</strong><span>{candidate.location || 'Location not listed'} · Read this role →</span></button>)}</section> : null}
           {assessment?.matchedBy === 'model' ? <p className="model-match-note">Role suggested by Nemotron from the published board. Confirm the title and location; this does not establish that the message refers to that role.</p> : null}
-          <details className="finding-details"><summary>Inspect all findings and sources</summary><div className="space-y-3">
+          <details className="finding-details" open><summary>Inspect all findings and sources</summary><div className="space-y-3">
             {(assessment?.findings ?? []).map((finding, index) => (
               <article
                 key={finding.claimId}
@@ -339,13 +339,15 @@ export function CasePage() {
               ) : null}
             </div>
           </form>
-          <Activity events={snapshot?.events ?? []} />
+          <Activity events={snapshot?.events ?? []} assessment={assessment} />
+          {assessment ? <ChatbotComparison assessment={assessment} /> : null}
         </aside>
       </div>
       {selected ? (
         <SourceDrawer
           finding={selected}
           evidence={(snapshot?.evidence ?? []).filter((item) => selected.evidenceIds.includes(item.id))}
+          employerId={snapshot?.version.employerId}
           onClose={closeSources}
         />
       ) : null}
@@ -375,13 +377,21 @@ function MessagePane({ text, quotes, activeQuote }: { text: string; quotes: stri
   );
 }
 
-function Activity({ events }: { events: CaseSnapshot['events'] }) {
+function Activity({ events, assessment }: { events: CaseSnapshot['events']; assessment?: CaseSnapshot['assessment'] }) {
   const names: Record<string, string> = { compareRoleCandidates: 'Compare returned roles before choosing the next check', getPublishedJob: 'Read the public job listing', listPublishedJobs: 'Look up published roles', compareClaimedDomain: 'Compare the claimed domain', resolveEmployer: 'Check the reviewed employer', getApprovedRecruitingPage: 'Find the official careers route' };
   const rows = events.filter((event) => event.type.startsWith('tool.') || event.type === 'claims.extracted');
   if (!rows.length) return null;
+  const completedTools = rows.filter((event) => event.type === 'tool.completed').length;
   return (
-    <details className="mt-4 rounded-panel border border-line bg-surface p-4">
+    <details className="agent-activity mt-4 rounded-panel border border-line bg-surface p-4" open>
       <summary className="min-h-11 cursor-pointer font-medium">How this check worked</summary>
+      {assessment ? (
+        <div className="guardrail-strip">
+          <div><span className="eyebrow">01 · Agent</span><p>{assessment.analysisMode === 'nemotron' ? 'Nemotron tool plan' : 'Policy baseline'}</p></div>
+          <div><span className="eyebrow">02 · Sources</span><p>{completedTools} bounded {completedTools === 1 ? 'check' : 'checks'}</p></div>
+          <div><span className="eyebrow">03 · Policy gate</span><p>Sender auth blocked</p></div>
+        </div>
+      ) : null}
       <ul className="mt-3 space-y-2 text-sm">
         {rows.map((event) => (
           <li key={event.sequence} className="border-l border-line pl-3 py-1">
@@ -391,11 +401,35 @@ function Activity({ events }: { events: CaseSnapshot['events'] }) {
           </li>
         ))}
       </ul>
+      <p className="guardrail-footnote">
+        Policy invariant enforced: quotes must appear verbatim in the attributed message, external calls are restricted to allowlisted Greenhouse/catalog hosts, and no evidence can mark a sender authenticated.
+      </p>
     </details>
   );
 }
 
-function SourceDrawer({ finding, evidence, onClose }: { finding: Finding; evidence: EvidenceItem[]; onClose: () => void }) {
+function ChatbotComparison({ assessment }: { assessment: NonNullable<CaseSnapshot['assessment']> }) {
+  const listingSupported = assessment.findings.some((item) => item.claimKey === 'listing' && item.status === 'supported');
+  return (
+    <details className="chatbot-comparison mt-4 rounded-panel border border-line bg-surface p-4">
+      <summary className="min-h-11 cursor-pointer font-medium">Why not just ask a chatbot?</summary>
+      <div className="comparison-cols">
+        <div className="comparison-box">
+          <span className="eyebrow">Prompt-only chatbot</span>
+          <p>{listingSupported ? 'Our recorded baseline had no board access to check the requisition or retrieve its application route.' : 'Our recorded baseline received the message and employer name without catalog or job-board tools.'}</p>
+          <span className="comparison-stat">17 / 24 action match · No URLs returned</span>
+        </div>
+        <div className="comparison-box active">
+          <span className="eyebrow">ProofRoute workflow</span>
+          <p>{assessment.approvedRoute ? `Retrieved ${new URL(assessment.approvedRoute.url).hostname} and locked ${assessment.conversation?.requests.length ?? 0} quote-backed request(s) across ${assessment.conversation?.messageCount ?? 1} message(s).` : 'Enforced source boundaries and preserved unresolved claims without guessing.'}</p>
+          <span className="comparison-stat">24 / 24 recorded synthetic cases · Policy-constrained</span>
+        </div>
+      </div>
+    </details>
+  );
+}
+
+function SourceDrawer({ finding, evidence, employerId, onClose }: { finding: Finding; evidence: EvidenceItem[]; employerId?: string | null; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { reduceMotion } = useUi();
   useGSAP(() => {
@@ -459,6 +493,14 @@ function SourceDrawer({ finding, evidence, onClose }: { finding: Finding; eviden
             </ul>
           </article>
         ))}
+        {(finding.claimKey === 'employer_route' || finding.claimKey === 'listing') && employerId === 'figma' ? (
+          <aside className="source-watch-card mt-4 text-sm">
+            <div className="source-record-meta"><span>Grok Bot Source Watch</span><span>7 recorded checks ok · 5 scheduled</span></div>
+            <p className="mt-2">Public Figma careers route and Greenhouse listing <code>6143238004</code> are monitored every two hours (America/Chicago) to detect disappeared roles or host redirects.</p>
+            <p className="mt-2 font-mono text-xs text-muted">Latest logged run: Nov 8, 2026, 2:07 AM CST · HTTP 200 · No source drift</p>
+            <p className="mt-2 text-xs text-muted">Recorded demo-source monitoring, not a live status feed. Two checks were manual; five match scheduled completion reports. It does not update the catalog or authenticate a sender.</p>
+          </aside>
+        ) : null}
       </div>
     </div>, document.body
   );

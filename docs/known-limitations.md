@@ -1,7 +1,7 @@
 # Known limitations
 
 - This build cannot authenticate a sender. A supported listing only means the role was on the employer-linked board at retrieval time.
-- One employer is in the catalog. Other names stay unsupported and are not treated as fraud.
+- Three employers are in the reviewed catalog: Figma, GitLab, and Cloudflare. Other names stay unsupported and are not treated as fraud.
 - A missing job is unresolved, not an accusation.
 - Hosted Nemotron smoke checks passed for `nvidia/nemotron-3.5-super-vl-120b-a12b`. A live check is model-assisted only when that call succeeds. Fixture replay stays policy-only. If the model call fails, the result is labeled policy-only fallback.
 - T-Mobile supplies no dataset, taxonomy, or baseline. The 24 held-out messages, their labels, and the prompt-only baseline are team-created. See `docs/dataset.md`.
@@ -13,5 +13,5 @@
 - Model-suggested roles are not confirmed message-to-job matches. Ambiguous candidates require user selection. Board scans consider up to 1,000 records and show up to 12 ranked candidates.
 - Conversation limits are 20 reviewed messages and 60,000 combined characters. No conversation history is silently truncated.
 - Deleting a case does not erase a downloaded export or data an inference provider may retain after a real key is used.
-- There is no public deployment yet. Render steps are in `docs/deployment.md` and have not been executed.
+- Public deployment is live at `https://proofroute-nufm.onrender.com` with persistent SQLite storage; deployment steps are documented in `docs/deployment.md`.
 - Grok Bot Source Watch has a downloaded seven-record run log: two manual checks and five later records matching Bot-exposed scheduled completion reports. Records lack run IDs and trigger metadata; see `docs/ai-workflow.md` for attribution limits. No source change or delivered alert has been recorded.

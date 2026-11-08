@@ -1,0 +1,10 @@
+{
+  "id": "scn-sms-channel-shift",
+  "title": "SMS outreach: off-channel chat switch",
+  "banner": "Synthetic mobile text scenario; public listing data; no employer affiliation.",
+  "employerId": "figma",
+  "jobId": "6143238004",
+  "whatItShows": "An unsolicited text cites a real internship and steers the conversation to WhatsApp before asking for a refundable deposit and login code.",
+  "text": "[SMS / Text Message]\nHi Jordan, this is Taylor from the campus recruiting desk regarding Figma's Software Engineer Intern (Summer 2027) opening (requisition 6143238004). We saw your resume and want to fast-track your interview today.\n\nDo not apply on the public careers page—can we continue on WhatsApp with our hiring coordinator at @figma_talent_desk.invalid so we can lock in your slot?",
+  "followUpText": "Before we release your interview link on WhatsApp, send the $150 refundable workstation deposit via Zelle to our equipment coordinator and reply with the verification code just sent to your phone."
+}

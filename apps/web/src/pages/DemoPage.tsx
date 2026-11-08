@@ -37,6 +37,55 @@ export function DemoPage() {
           </li>
         ))}
       </ul>
+      <section className="benchmark-ledger" aria-labelledby="ledger-title">
+        <div className="ledger-header">
+          <div>
+            <p className="eyebrow">Recorded evaluation &amp; security gates</p>
+            <h2 id="ledger-title">Beyond a chatbot.<br /><span>Measured on held-out cases.</span></h2>
+          </div>
+          <p className="ledger-note">
+            Evaluated on 24 frozen synthetic cases (8 harmful, 8 benign, 8 ambiguous) with <code>nvidia/nemotron-3.5-super-vl-120b-a12b</code>. These counts measure workflow and official-route resolution on a synthetic gate, not a real-world scam-detection rate.
+          </p>
+        </div>
+        <div className="ledger-grid">
+          <article className="ledger-card highlight">
+            <span className="eyebrow">Live Nemotron + Greenhouse + Policy</span>
+            <div className="ledger-stat">24<span> / 24</span></div>
+            <h3>Full workflow decision match</h3>
+            <p>Nemotron extracts quote-backed requests and plans allowlisted checks; the server reads the live Greenhouse board and enforces the evidence policy.</p>
+            <dl className="ledger-metrics">
+              <div><dt>Harmful paused</dt><dd>8 / 8</dd></div>
+              <div><dt>False benign pauses</dt><dd>0 / 8</dd></div>
+              <div><dt>Sender authenticated</dt><dd>0 / 24</dd></div>
+              <div><dt>Median latency</dt><dd>1.84 s</dd></div>
+            </dl>
+          </article>
+          <article className="ledger-card">
+            <span className="eyebrow">Prompt-only Nemotron baseline</span>
+            <div className="ledger-stat muted">17<span> / 24</span></div>
+            <h3>No external tools or board lookup</h3>
+            <p>Given the same message and employer name without tools, the baseline paused 8/8 harmful cases but missed all 7 official-route resolutions. It returned no URLs.</p>
+            <dl className="ledger-metrics">
+              <div><dt>Harmful paused</dt><dd>8 / 8</dd></div>
+              <div><dt>Route mismatches</dt><dd>7 cases</dd></div>
+              <div><dt>URLs returned</dt><dd>0</dd></div>
+              <div><dt>API failures</dt><dd>0</dd></div>
+            </dl>
+          </article>
+          <article className="ledger-card">
+            <span className="eyebrow">Adversarial &amp; workflow verification</span>
+            <div className="ledger-stat">Tested</div>
+            <h3>Hard policy &amp; source guardrails</h3>
+            <p>Server-enforced boundaries reject prompt injection, forged quotes, private/loopback SSRF, lookalike domains, and cross-session access.</p>
+            <dl className="ledger-metrics">
+              <div><dt>Reviewed catalog</dt><dd>3 employers</dd></div>
+              <div><dt>Host allowlist</dt><dd>Enforced</dd></div>
+              <div><dt>Grok Source Watch</dt><dd>7 / 7 runs ok</dd></div>
+              <div><dt>Local OCR / EML</dt><dd>On-device</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
       <p className="mt-6 max-w-prose text-sm text-muted">Fictional senders, no employer affiliation. Live checks read public listing data; fixture replay uses labeled recorded evidence. This demo never authenticates the sender.</p>
     </div>
   );
