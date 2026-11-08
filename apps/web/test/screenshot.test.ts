@@ -15,3 +15,9 @@ test('quote locations span lines without inventing matches',()=>{
  const lines=['Keep 200 and transfer','the remainder to our supplier.'].map((text,i)=>({text,bbox:{x0:10,y0:i*40,x1:200,y1:i*40+30}}));
  assert.deepEqual(matchQuote(lines,'Keep 200 and transfer the remainder to our supplier.'),[0,1]);assert.deepEqual(matchQuote(lines,'send your password now'),[]);assert.deepEqual(matchQuote(lines,'Keep'),[]);
 });
+
+test('screenshot file validation rejects unsupported and oversized uploads before decoding',async()=>{
+ const {recognizeScreenshot}=await import('../src/screenshot.js');
+ await assert.rejects(recognizeScreenshot(new File(['text'],'note.txt',{type:'text/plain'}),()=>{}),/PNG/);
+ await assert.rejects(recognizeScreenshot(new File([new Uint8Array(8*1024*1024+1)],'large.png',{type:'image/png'}),()=>{}),/8 MB/);
+});
