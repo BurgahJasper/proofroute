@@ -472,8 +472,8 @@ main:focus { outline: none; }
   .site-nav a { padding-inline: 0; }
   .motion-control { font-size: 11px; min-height: 36px; padding-inline: 10px; }
   .home-shell { padding-inline: 20px; }
-  .intake-grid { padding-top: 28px; }
-  .hero-title { font-size: clamp(56px,12vw,76px); letter-spacing: -2px; }
+  .intake-grid { padding-top: 28px; gap: 18px; }
+  .hero-title { font-size: clamp(44px,11vw,64px); letter-spacing: -1.8px; }
   .intake-card { padding: 22px 18px; }
   .intake-heading h2 { font-size: 22px; }
   .story-preview { padding: 20px; }
