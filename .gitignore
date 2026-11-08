@@ -22,3 +22,5 @@ data/*.sqlite-journal
 # Scratch downloads and local caches
 tmp/
 eval/private/
+
+apps/web/public/ocr/

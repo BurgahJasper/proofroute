@@ -23,6 +23,8 @@ import { ConversationTimeline } from '../components/ConversationTimeline';
 
 import { SenderComparison } from '../components/SenderComparison';
 
+import { ScreenshotReview } from '../components/ScreenshotReview';
+
 const STEPS = ['Read', 'Check sources', 'Compare', 'Next step'] as const;
 const CLAIM_TITLES = { employer_route: 'Employer route', listing: 'Published role', sender: 'Sender identity', request: 'Requested action' };
 
@@ -250,6 +252,7 @@ export function CasePage() {
       <div className="case-workspace mt-6" aria-busy={running}>
         <section className="case-evidence" aria-label="Evidence">
       {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
+        {assessment ? <ScreenshotReview caseId={caseId} quotes={[...new Set(assessment.conversation?.requests.filter(r=>r.messageVersion === 1).map(r=>r.quote) ?? [])]} activeQuote={tracedQuote} /> : null}
         <SenderComparison text={snapshot?.messages?.[0]?.text ?? snapshot?.version.reviewedText ?? ''} employer={employers.find(e => e.id === snapshot?.version.employerId)} />
         <MessagePane text={message} quotes={quotes} activeQuote={tracedQuote || assessment?.findings.find(item => item.claimKey === tracedKey)?.inputSpan?.quote} />
 

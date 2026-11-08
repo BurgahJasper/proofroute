@@ -32,7 +32,8 @@ export async function buildApp(options: BuildOptions = {}) {
       ? {
           directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'"],
+            scriptSrc: ["'self'", "'wasm-unsafe-eval'"],
+            workerSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
             imgSrc: ["'self'", 'data:'],
             fontSrc: ["'self'"],

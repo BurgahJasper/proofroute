@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { normalizeRoleReference, redactText } from '@proofroute/contracts/browser';
 import { createCase, ensureSession, getEmployers, getScenarios, startRun, type EmployerOption, type Scenario, type SessionInfo } from '../api';
 import { useUi } from '../ui';
+import type { ScreenshotEvidence } from '../screenshot';
+import { saveScreenshot } from '../screenshot';
 import { StoryPreview } from '../components/StoryPreview';
 
 export function HomePage() {
@@ -26,15 +28,32 @@ export function HomePage() {
   const [attested, setAttested] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [inputKind, setInputKind] = useState<'paste' | 'email'>('paste');
+  const [inputKind, setInputKind] = useState<'paste' | 'email' | 'image'>('paste');
   const [importing, setImporting] = useState(false);
   const [importNote, setImportNote] = useState('');
   const importVersion = useRef(0);
+  const [screenshot, setScreenshot] = useState<ScreenshotEvidence | null>(null);
+  const [ocrProgress, setOcrProgress] = useState(0);
+  async function importImage(file?: File) {
+    if (!file || importing) return;
+    const version = ++importVersion.current;
+    setImporting(true); setOcrProgress(0); setError(''); setScreenshot(null);
+    try {
+      const { recognizeScreenshot } = await import('../screenshot');
+      const result = await recognizeScreenshot(file, progress => { if (version === importVersion.current) setOcrProgress(progress); });
+      if(version !== importVersion.current) return;
+      setText(result.text); setScreenshot(result.evidence); setScenarioId(undefined); setBanner(''); setAttested(false); setSummary([]); setStep('paste');
+      setImportNote(`Text extracted locally. OCR confidence ${Math.round(result.evidence.confidence)}% describes recognition quality, not message trustworthiness. Correct any mistakes before review.`);
+    } catch(reason) { if(version === importVersion.current) setError(reason instanceof Error ? reason.message : 'The screenshot could not be read.'); }
+    finally { if(version === importVersion.current) setImporting(false); }
+  }
+
 
   async function importEmail(file?: File) {
-    if (!file) return;
+    if (!file || importing) return;
     const version = ++importVersion.current;
     setImporting(true);
+    setScreenshot(null);
     setError('');
     try {
       const { parseEmailFile } = await import('../email-import');
@@ -86,6 +105,7 @@ export function HomePage() {
     setImporting(false);
     setImportNote('');
     setInputKind('paste');
+    setScreenshot(null);
     setText(scenario.text);
     setEmployerId(scenario.employerId ?? '');
     setRoleReference(scenario.jobId);
@@ -142,6 +162,7 @@ export function HomePage() {
         scenarioId,
         sourcePreference: fixture ? 'fixture' : 'live',
       });
+      if (screenshot) { try { await saveScreenshot(created.caseId, screenshot); } catch { /* Analysis remains available if local storage is full. */ } }
       await startRun(created.caseId);
       navigate(`/cases/${created.caseId}`);
     } catch (reason) {
@@ -182,10 +203,16 @@ export function HomePage() {
         <div className="intake-heading"><div><p className="eyebrow">Your evidence desk</p><h2>{step === 'paste' ? 'Start with the message.' : 'Review before you share.'}</h2></div><span className="step-count">{step === 'paste' ? '01' : '02'}<span> / 02</span></span></div>
         {step === 'paste' ? <>
           <div className="input-choice" role="group" aria-label="Choose how to add your message">
-            <button type="button" aria-pressed={inputKind === 'paste'} onClick={() => { importVersion.current++; setImporting(false); setInputKind('paste'); setError(''); }}>Paste a message</button>
-            <button type="button" aria-pressed={inputKind === 'email'} onClick={() => { setInputKind('email'); setError(''); }}>Upload an email</button>
+            <button type="button" disabled={importing} aria-pressed={inputKind === 'paste'} onClick={() => { importVersion.current++; setImporting(false); setInputKind('paste'); setError(''); }}>Paste a message</button>
+            <button type="button" disabled={importing} aria-pressed={inputKind === 'email'} onClick={() => { setInputKind('email'); setError(''); }}>Upload an email</button>
+            <button type="button" disabled={importing} aria-pressed={inputKind === 'image'} onClick={() => { setInputKind('image'); setError(''); }}>Screenshot</button>
           </div>
-          {inputKind === 'email' ? <div className="email-import">
+          {inputKind === 'image' ? <div className="email-import"><div className="email-picker" onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();void importImage(event.dataTransfer.files[0]);}}>
+            <input id="image-file" type="file" accept="image/png,image/jpeg,image/webp" disabled={importing} onChange={event=>{void importImage(event.currentTarget.files?.[0]);event.currentTarget.value='';}} />
+            <label htmlFor="image-file"><strong>Choose a screenshot</strong><span>PNG, JPEG or WebP · Up to 8 MB</span></label></div>
+            <p className="email-import-help">Text extraction runs on your device. English screenshots work best.</p>
+            <a href="/samples/recruiting-request.png" download>Download a fictional screenshot ↓</a></div> : null}
+          {inputKind === 'email'  ? <div className="email-import">
             <div className="email-picker">
               <input id="email-file" type="file" aria-label="Choose an email file" accept=".eml,message/rfc822" disabled={importing} onChange={event => { void importEmail(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
               <label htmlFor="email-file">
@@ -198,9 +225,10 @@ export function HomePage() {
             <a href="/samples/fictional-recruiting.eml" download>Download a fictional email to try <span aria-hidden="true">↓</span></a>
           </div> : null}
         </> : null}
-        {importing ? <p role="status" className="import-status">Opening email locally…</p> : null}
+        {importing ? <p role="status" className="import-status">{inputKind === 'image' ? `Reading screenshot locally… ${Math.round(ocrProgress*100)}%` : 'Opening email locally…'}</p> : null}
         {importNote ? <p role="status" className="import-status">{importNote}</p> : null}
         {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
+        {screenshot ? <div className="intake-image-preview"><img src={screenshot.image} alt="Screenshot selected for text extraction"/><p>The source image stays on this device. Only reviewed text is shared.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
         {step === 'review' ? <p className="mb-3 text-sm text-supported" role="status">Personal details have been checked for redaction. Review the text below before sending it.</p> : null}
         {inputKind === 'paste' || text ? <>
