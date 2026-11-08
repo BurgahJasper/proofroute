@@ -548,3 +548,42 @@ main:focus { outline: none; }
 @media(max-width:450px) { .input-choice { gap:2px; } .input-choice button { font-size:11px; padding-inline:4px; } }
 
 .screenshot-samples { margin:32px 0; border-block:1px solid var(--color-line); padding:24px 0; } .screenshot-samples h2 { font:28px var(--font-editorial); margin:10px 0; } .screenshot-samples p { font-size:13px; max-width:65ch; line-height:1.7; } .screenshot-samples > div { display:flex; flex-wrap:wrap; gap:20px; margin-top:16px; font-size:13px; text-decoration:underline; }
+
+/* Final cross-screen rhythm. The workspace stylesheet follows these foundations. */
+:root { --page-width:1280px; --page-gutter:clamp(20px,3vw,40px); }
+.site-header-inner,.home-shell,.sample-page { max-width:var(--page-width); padding-inline:var(--page-gutter); }
+.site-footer { max-width:var(--page-width); margin-inline:auto; padding-inline:var(--page-gutter); }
+.sample-tile .sample-tile-actions { display:flex; flex-direction:column; gap:10px; align-items:stretch; }
+.sample-tile .sample-tile-actions a { min-height:44px; padding:12px 14px; line-height:1.5; }
+.sample-tile .sample-tile-actions a + a { border-color:transparent; padding-inline:0; justify-content:flex-start; text-decoration:underline; text-underline-offset:4px; }
+.sample-tile .sample-tile-actions a + a:hover { background:transparent; color:var(--color-action); }
+.screenshot-samples { margin-block:32px; padding-block:24px; }
+.screenshot-samples h2,.screenshot-heading h2 { font:28px/1.2 var(--font-editorial); letter-spacing:-.4px; }
+.screenshot-samples > div { gap:8px 24px; }
+.screenshot-samples a { display:inline-flex; align-items:center; min-height:44px; }
+.source-overlay { position:fixed; inset:0; width:100%; height:100dvh; z-index:50; display:flex; justify-content:flex-end; }
+.source-drawer { flex:0 1 448px; width:100%; max-width:448px; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.source-outbound { border-color:var(--color-line); border-radius:4px; }
+.source-record { border-radius:4px; }
+.source-drawer :is(p,li) { overflow-wrap:anywhere; }
+.source-close:focus-visible { outline:2px solid var(--color-action); outline-offset:4px; }
+.brief-sheet { margin:40px auto 56px; border-radius:4px; }
+.brief-masthead { align-items:baseline; }
+.brief-masthead > a { flex-shrink:0; min-height:44px; display:inline-flex; align-items:center; }
+.brief-sheet > h2 { margin-top:28px; padding-top:20px; }
+.brief-analysis { margin:16px 0 24px; font-size:12px; line-height:1.7; color:var(--color-muted); }
+.brief-analysis summary { cursor:pointer; min-height:32px; }
+.brief-official-route { margin-top:16px; width:100%; min-height:48px; font-size:14px; }
+.brief-sheet .brief-route-caption { font-size:12px; line-height:1.6; color:var(--color-muted); margin-top:8px; }
+.brief-copy-button { min-height:44px; padding:10px 16px; border:1px solid var(--color-line); border-radius:4px; font-size:13px; margin-top:12px; }
+.brief-sheet textarea { font-size:14px; line-height:1.75; min-height:160px; }
+.brief-sheet :is(a,p,li) { overflow-wrap:anywhere; }
+@media(max-width:760px) {
+ .brief-sheet { margin:24px 20px 40px; padding:24px 20px; }
+ .brief-masthead { flex-direction:column; gap:4px; padding-bottom:16px; margin-bottom:20px; }
+ .brief-sheet h1 { font-size:34px; line-height:1.12; }
+ .source-drawer { flex-basis:100%; max-width:none; padding:24px 20px; }
+ .source-drawer h2 { font-size:30px; line-height:1.15; }
+ .screenshot-heading h2 { font-size:26px; }
+ .sender-comparison dl { gap:16px 20px; }
+}

@@ -1,5 +1,6 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { createPortal } from 'react-dom';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { redactText } from '@proofroute/contracts/browser';
@@ -398,7 +399,7 @@ function SourceDrawer({ finding, evidence, onClose }: { finding: Finding; eviden
   const ref = useRef<HTMLDivElement>(null);
   const { reduceMotion } = useUi();
   useGSAP(() => {
-    if (!reduceMotion && ref.current) gsap.from(ref.current, { x: 32, opacity: 0, duration: .24, ease: 'power2.out' });
+    if (!reduceMotion && ref.current) gsap.from(ref.current, { x: 32, opacity: 0, duration: .24, ease: 'power2.out', clearProps: 'transform,opacity' });
   }, { scope: ref, dependencies: [reduceMotion], revertOnUpdate: true });
   useEffect(() => {
     const root = ref.current;
@@ -430,7 +431,7 @@ function SourceDrawer({ finding, evidence, onClose }: { finding: Finding; eviden
       previous?.focus();
     };
   }, [onClose]);
-  return (
+  return createPortal(
     <div className="source-overlay fixed inset-0 z-20 flex justify-end bg-ink/30" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
       <div ref={ref} role="dialog" aria-modal="true" aria-labelledby="source-title" className="source-drawer h-full w-full max-w-md overflow-y-auto bg-surface shadow-xl">
         <div className="source-drawer-top"><span className="eyebrow">The evidence record</span><button type="button" className="source-close" onClick={onClose}>Close sources <span aria-hidden="true">×</span></button></div>
@@ -459,6 +460,6 @@ function SourceDrawer({ finding, evidence, onClose }: { finding: Finding; eviden
           </article>
         ))}
       </div>
-    </div>
+    </div>, document.body
   );
 }

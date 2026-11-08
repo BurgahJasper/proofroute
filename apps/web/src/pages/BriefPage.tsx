@@ -38,7 +38,7 @@ export function BriefPage() {
         </span>
       </div>
       {assessment ? (
-        <p className="mt-3 text-sm text-muted" data-testid="analysis-note">
+        <details className="brief-analysis"><summary>About this analysis</summary><p className="mt-3 text-sm text-muted" data-testid="analysis-note">
           {analysisNote({
             analysisMode: assessment.analysisMode,
             modelId: assessment.modelId,
@@ -46,7 +46,7 @@ export function BriefPage() {
             errorCode: assessment.errorCode,
             providerConfigured: Boolean(snapshot?.providerConfigured),
           })}
-        </p>
+        </p></details>
       ) : null}
       <h1 className="mt-2 font-editorial text-4xl leading-tight" data-testid="recommendation">
         {assessment?.headline || (snapshot ? 'Brief not ready' : 'Loading this brief.')}
@@ -64,10 +64,11 @@ export function BriefPage() {
       </ul>
       <h2 className="mt-8 text-lg font-semibold">Next step</h2>
       {assessment?.approvedRoute ? (
-        <a className="mt-3 inline-flex min-h-11 items-center rounded-control bg-action px-4 text-action-ink no-underline" href={assessment.approvedRoute.url} target="_blank" rel="noreferrer" data-testid="official-route">
-          {assessment.approvedRoute.label}. Opens outside ProofRoute.
+        <a className="official-route-button brief-official-route" title={assessment.approvedRoute.label} href={assessment.approvedRoute.url} target="_blank" rel="noreferrer" data-testid="official-route">
+          {assessment.approvedRoute.kind === 'application' ? 'Open official application' : 'Open employer’s official route'} <span aria-hidden="true">↗</span>
         </a>
       ) : null}
+      {assessment?.approvedRoute ? <p className="brief-route-caption">{assessment.approvedRoute.label} · Opens a new tab</p> : null}
       {assessment ? <p className="mt-4">We couldn't identify a recruiting verification contact.</p> : null}
       <label className="mt-4 block text-sm font-medium" htmlFor="draft">
         Verification draft. ProofRoute does not send it.
@@ -79,7 +80,7 @@ export function BriefPage() {
       </label>
       <button
         type="button"
-        className="mt-3 min-h-11 rounded-control border border-ink px-4"
+        className="brief-copy-button"
         onClick={() => {
           void navigator.clipboard.writeText(draft).then(() => setCopied('Draft copied.')).catch(() => setCopied('Clipboard unavailable. Select and copy the draft above.'));
         }}
