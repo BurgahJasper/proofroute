@@ -18,7 +18,7 @@ export function DemoPage() {
   }, []);
   useGSAP(() => {
     if (reduceMotion) return;
-    gsap.from('.sample-tile', { y: 16, opacity: 0, duration: .5, stagger: .08, ease: 'power2.out' });
+    gsap.from('.sample-tile', { y: 16, opacity: 0, duration: .4, stagger: .05, ease: 'power2.out', clearProps: 'transform,opacity' });
   }, { scope: root, dependencies: [scenarios.length, reduceMotion], revertOnUpdate: true });
   return (
     <div className="sample-page" ref={root}>

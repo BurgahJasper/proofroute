@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router';
 import { ensureSession, exportHref, getCase, type CaseSnapshot } from '../api';
-import { AnalysisBadge, ModeBadge, analysisNote } from '../ui';
+import { AnalysisBadge, ModeBadge, analysisNote, useUi } from '../ui';
 
 export function BriefPage() {
   const { caseId = '' } = useParams();
+  const root = useRef<HTMLDivElement>(null);
+  const { reduceMotion } = useUi();
   const [snapshot, setSnapshot] = useState<CaseSnapshot | null>(null);
   const [includeSender, setIncludeSender] = useState(false);
   const [copied, setCopied] = useState('');
@@ -18,14 +22,15 @@ export function BriefPage() {
   }, [caseId]);
 
   const assessment = snapshot?.assessment;
+  useGSAP(() => { if (!reduceMotion && assessment) gsap.from('[data-brief-reveal]', { y:8, opacity:0, duration:.35, stagger:.05, ease:'power2.out', clearProps:'transform,opacity' }); }, {scope:root, dependencies:[assessment?.version,reduceMotion],revertOnUpdate:true});
   const sender = snapshot?.version.reviewedText.match(/\[LOCAL\]@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/)?.[0];
   const draft = assessment
     ? `${assessment.verificationDraft}${includeSender && sender ? ` Sender address as reviewed: ${sender}.` : ''}`
     : '';
 
   return (
-    <div className="brief-sheet mx-auto max-w-3xl">
-      <div className="brief-masthead"><p>ProofRoute / Evidence brief</p><Link className="text-sm underline" to={`/cases/${caseId}`}>
+    <div className="brief-sheet mx-auto max-w-3xl" ref={root}>
+      <div className="brief-masthead" data-brief-reveal><p>ProofRoute / Evidence brief</p><Link className="text-sm underline" to={`/cases/${caseId}`}>
         Back to the evidence
       </Link></div>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}
@@ -48,7 +53,7 @@ export function BriefPage() {
           })}
         </p></details>
       ) : null}
-      <h1 className="mt-2 font-editorial text-4xl leading-tight" data-testid="recommendation">
+      <h1 className="mt-2 font-editorial text-4xl leading-tight" data-testid="recommendation" data-brief-reveal>
         {assessment?.headline || (snapshot ? 'Brief not ready' : 'Loading this brief.')}
       </h1>
       <ul className="mt-4 list-disc space-y-2 pl-5">
