@@ -11,3 +11,11 @@ test('does not infer headers from prose or choose among ambiguous addresses',()=
  assert.equal(compare('From: a@figma.com, b@other.example',['figma.com']).from,undefined);
  assert.match(compare('From: x@foo.example',[]).observation,/No reviewed/);
 });
+
+test('positive consistency requires a known From domain and no conflicting Reply-To',()=>{
+ assert.equal(compare('From: x@figma.com\nReply-To: x@figma.com',['figma.com']).consistent,true);
+ assert.equal(compare('From: x@figma.com',['figma.com']).consistent,true);
+ assert.equal(compare('Reply-To: x@figma.com',['figma.com']).consistent,false);
+ assert.equal(compare('From: x@figma.com\nReply-To: x@other.example',['figma.com']).consistent,false);
+ assert.equal(compare('From: x@figma.com',[]).consistent,false);
+});

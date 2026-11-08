@@ -529,3 +529,11 @@ main:focus { outline: none; }
 .decision-focus { margin:20px 0; font-size:13px; line-height:1.7; }
 .decision-focus blockquote { border-left:2px solid #b06a62; padding-left:12px; margin:16px 0; }
 .decision-focus cite { display:block; font-size:10px; font-style:normal; color:var(--color-muted); margin-top:8px; }
+
+.sender-comparison[data-consistent=true] .sender-observation { background:#edf4ee; border-left-color:#3f7557; color:#28503a; }
+.sender-comparison[data-consistent=true] summary { color:#28503a; }
+.positive-evidence { margin:20px 0; padding:16px; background:#eff5ef; border-left:2px solid #648b6e; font-size:12px; line-height:1.65; }
+.positive-evidence ul { margin:12px 0; display:grid; gap:10px; }
+.positive-evidence li { display:flex; gap:9px; }
+.positive-evidence li span { color:#326149; }
+.positive-evidence > p:last-child { color:#526658; font-size:11px; }
