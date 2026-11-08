@@ -219,7 +219,7 @@ export function HomePage() {
           Real job.<br /><span>Wrong person?</span>
         </h1>
         <p className="hero-description" data-reveal>
-          Don’t lose a good opportunity to a convincing message. Check the evidence. Keep your next move in your hands.
+          Check the message. Find the official way forward.
         </p>
         <StoryPreview />
       </div>

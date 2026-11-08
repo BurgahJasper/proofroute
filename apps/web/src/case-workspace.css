@@ -110,3 +110,16 @@
 .case-page .next-step .decision-focus { margin-block:20px; }
 @media(max-width:960px) { .case-page .request-facts { grid-template-columns:repeat(2,minmax(0,1fr)); } .case-page .next-step { padding:24px; } }
 @media(max-width:450px) { .case-page .conversation-intro { flex-wrap:wrap; gap:12px; } .case-page .request-quote { font-size:25px; overflow-wrap:anywhere; } }
+
+/* Evidence-first hierarchy: action, then inspectable evidence. */
+.case-page > .next-step { margin-top:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,.6fr); gap:12px 32px; padding:24px; }
+.case-page > .next-step .next-step-kicker,.case-page > .next-step h2,.case-page > .next-step .decision-states { grid-column:1; }
+.case-page > .next-step h2 { font-size:clamp(28px,3vw,40px); margin:0; }
+.case-page > .next-step .route-destination { grid-column:2; grid-row:1 / span 3; margin:0; align-self:center; }
+.decision-states { display:flex; flex-wrap:wrap; gap:8px 20px; font-size:13px; }
+.decision-explanation,.decision-limits,.analysis-disclosure { font-size:13px; }
+.case-page > .next-step .brief-button { margin:0; }
+.case-page > .next-step .next-step-footnote { margin:0; }
+.case-page .case-progress:has(li:last-child[aria-current="step"]) { margin-top:12px; }
+.message-preview summary,.evaluation-disclosure > summary { min-height:44px; cursor:pointer; padding-block:12px; }
+@media(max-width:760px) { .case-page > .next-step { display:flex; flex-direction:column; gap:14px; } .case-page > .next-step .route-destination { width:100%; } }

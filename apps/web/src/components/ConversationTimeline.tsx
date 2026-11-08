@@ -16,7 +16,7 @@ export function ConversationTimeline({ assessment, messages, onTrace }: {
   const message = messages.find(m => m.version === active);
   return <section className="conversation-timeline" aria-labelledby="conversation-title">
     <div className="conversation-intro"><div><p className="eyebrow">Follow the conversation</p>
-      <h2 id="conversation-title">{first ? `The pause starts at message ${first}.` : 'Every message stays in view.'}</h2></div>
+      <h2 id="conversation-title">{first ? `The pause starts at message ${first}.` : 'Reviewed conversation'}</h2></div>
       <span className="preview-label">{trace.messageCount} {trace.messageCount === 1 ? 'message' : 'messages'} reviewed</span></div>
     <div className="conversation-stops" aria-label="Choose a reviewed message">
       {messages.map(m => {
@@ -32,7 +32,7 @@ export function ConversationTimeline({ assessment, messages, onTrace }: {
         <p className="eyebrow">{r.origin === 'model' ? 'Contextual finding · Nemotron' : 'Request pattern'} · Message {r.messageVersion}</p>
         <button type="button" className="request-quote" onClick={() => onTrace(r.quote)}>“{r.quote}”</button>
         <dl className="request-facts"><div><dt>Who asks</dt><dd>{r.actor}</dd></div><div><dt>Requested action</dt><dd>{r.action}</dd></div><div><dt>Asset</dt><dd>{r.asset || 'Not established'}</dd></div><div><dt>Destination</dt><dd>{r.destination || 'Not established'}</dd></div></dl>
-      </div>) : <><p className="eyebrow">Message {active}</p><p className="timeline-message">{message?.text}</p><p className="text-sm text-muted">No sensitive request was identified here. This does not verify the sender.</p></>}
+      </div>) : <><p className="eyebrow">Message {active}</p><details className="message-preview"><summary>Read message {active}</summary><p className="timeline-message">{message?.text}</p></details></>}
       {first && active !== first ? <p className="retained-warning">The request from message {first} still needs independent verification. A later reply does not clear it.</p> : null}
     </div>
   </section>;

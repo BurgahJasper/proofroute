@@ -11,7 +11,7 @@ export function SenderComparison({ text, employer }: { text: string; employer?: 
     ['Reviewed employer domains', employer?.knownDomains.join(', ') || 'Not available'],
   ];
   if (comparison.channelCue) rows.push(['Channel cue', comparison.channelCue]);
-  return <details className="sender-comparison" open={comparison.hasHeaders || Boolean(comparison.channelCue)} data-consistent={comparison.consistent}>
+  return <details className="sender-comparison" open={Boolean(comparison.channelCue) || (comparison.hasHeaders && !comparison.consistent)} data-consistent={comparison.consistent}>
     <summary>{comparison.consistent ? "Consistent with the employer’s published information" : "Who is this message from?"}<span>{comparison.consistent ? "Positive indicator · Domain match" : comparison.channelCue ? "Channel & address comparison" : "Address comparison"}</span></summary>
     <p className="sender-intro">{comparison.consistent ? `The available address domains match the reviewed domains for ${employer?.name}. This supports consistency with the company’s published information.` : `The selected employer is ${employer?.name ?? 'outside the reviewed catalog'}. Compare the address and channel details below.`}</p>
     <dl>{rows.map(([label,value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>

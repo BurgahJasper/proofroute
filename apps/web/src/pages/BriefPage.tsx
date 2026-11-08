@@ -79,7 +79,7 @@ export function BriefPage() {
           <li key={reason}>{reason}</li>
         ))}
       </ul>
-      <h2 className="mt-8 text-lg font-semibold">Still unknown</h2>
+      <button type="button" className="brief-print-button mt-4" onClick={() => window.print()}>Print / Save PDF</button><h2 className="mt-8 text-lg font-semibold">Still unknown</h2>
       <ul className="mt-2 list-disc pl-5">
         {(assessment?.unresolvedQuestions ?? []).map((item) => (
           <li key={item}>{item}</li>

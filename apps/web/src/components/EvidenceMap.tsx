@@ -26,7 +26,7 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
         return <Fragment key={key}>
           {index > 0 ? <span className={`map-connector ${key === 'sender' || key === 'request' ? 'uncertain' : ''}`} aria-hidden="true" /> : null}
           <div className="map-stop"><button type="button" className="map-node" data-active={activeKey === key} disabled={!finding} onMouseEnter={() => onTrace(key)} onMouseLeave={() => onTrace(null)} onFocus={() => onTrace(key)} onBlur={() => onTrace(null)} onClick={() => finding && onSelect(finding)} aria-label={`${labels[key]}: ${risk ? 'risk detected' : finding?.status ?? 'unresolved'}. Inspect evidence.`}>
-            <span className="map-symbol" data-status={risk ? 'contradicted' : finding?.status}>{risk ? '!' : finding?.status === 'supported' ? '✓' : finding?.status === 'contradicted' ? '!' : '?'}</span><strong>{labels[key]}</strong><span>{risk ? 'Risk detected' : finding?.status ?? 'Unresolved'}</span>
+            <span className="map-symbol" data-status={risk ? 'contradicted' : finding?.status}>{risk ? '!' : finding?.status === 'supported' ? '✓' : finding?.status === 'contradicted' ? '!' : '?'}</span><strong>{labels[key]}</strong><span>{risk ? 'Risk detected' : key === 'request' && !assessment.errorCode && assessment.conversation && !assessment.conversation.requests.length ? 'No sensitive request found' : finding?.status ?? 'Unresolved'}</span>
           </button></div>
         </Fragment>;
       })}

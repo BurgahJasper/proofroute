@@ -250,6 +250,7 @@ export function CasePage() {
         </p>
       ) : null}
 
+      <NextStep assessment={assessment} caseId={caseId} loading={loading} providerConfigured={Boolean(snapshot?.providerConfigured)} />
       <div className="case-workspace mt-6" aria-busy={running}>
         <section className="case-evidence" aria-label="Evidence">
       {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
@@ -261,7 +262,7 @@ export function CasePage() {
             <h2 className="text-lg font-semibold">What the sources show</h2>
             {assessment ? (
               <p className="text-xs text-muted">
-                {assessment.coverageAnswered}/{assessment.coverageTotal} answered <span>· Coverage, not a safety score</span>
+                Select a finding to inspect its source
               </p>
             ) : (
               <p className="text-sm text-muted">{loading ? 'Loading this check.' : 'Waiting for the check.'}</p>
@@ -270,7 +271,7 @@ export function CasePage() {
           {assessment ? <EvidenceMap assessment={assessment} onSelect={setSelected} onTrace={(key) => { setTracedKey(key); setTracedQuote(''); }} activeKey={tracedKey} /> : <div className="investigation-wait" role="status"><div className="wait-orbit" aria-hidden="true"><span>?</span></div><h3>Building your Proof Path</h3><p>{STEPS[stage]} · Evidence appears after the checks finish.</p><span>No conclusion yet. A match will never verify the sender.</span></div>}
           {assessment?.candidateChoices?.length ? <section className="candidate-picker"><h3>Which published role did you mean?</h3><p>We could not establish one exact match. Choose a role to read its official listing, or keep the result unresolved.</p>{assessment.candidateChoices.map(candidate => <button type="button" key={candidate.jobId} disabled={busy || running} onClick={() => void recheck(candidate.jobId)}><strong>{candidate.title}</strong><span>{candidate.location || 'Location not listed'} · Read this role →</span></button>)}</section> : null}
           {assessment?.matchedBy === 'model' ? <p className="model-match-note">Role suggested by Nemotron from the published board. Confirm the title and location; this does not establish that the message refers to that role.</p> : null}
-          <details className="finding-details" open><summary>Inspect all findings and sources</summary><div className="space-y-3">
+          <details className="finding-details"><summary>Inspect all findings and sources</summary><div className="space-y-3">
             {(assessment?.findings ?? []).map((finding, index) => (
               <article
                 key={finding.claimId}
@@ -305,7 +306,7 @@ export function CasePage() {
           </div></details>
         </section>
         <aside className="case-sidebar">
-          <NextStep assessment={assessment} caseId={caseId} loading={loading} providerConfigured={Boolean(snapshot?.providerConfigured)} />
+
       {assessment ? <DecisionChange assessment={assessment} previous={snapshot?.previousAssessment} /> : null}
 
           <form
@@ -398,7 +399,7 @@ function Activity({ events, assessment }: { events: CaseSnapshot['events']; asse
   if (!rows.length) return null;
   const completedTools = rows.filter((event) => event.type === 'tool.completed').length;
   return (
-    <details className="agent-activity mt-4 rounded-panel border border-line bg-surface p-4" open>
+    <details className="agent-activity mt-4 rounded-panel border border-line bg-surface p-4">
       <summary className="min-h-11 cursor-pointer font-medium">How this check worked</summary>
       {assessment ? (
         <div className="guardrail-strip">

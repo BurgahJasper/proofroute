@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import { ensureSession, getScenarios, type Scenario } from '../api';
 
 export function DemoPage() {
+  const [showAll, setShowAll] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const { reduceMotion } = useUi();
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
@@ -36,7 +37,7 @@ export function DemoPage() {
         </div>
       </section>
       <ul className="sample-grid">
-        {scenarios.map((scenario, index) => (
+        {scenarios.filter(s => showAll || ['scn-benign-agency','scn-conversation-shift','scn-missing-listing'].includes(s.id)).map((scenario, index) => (
           <li key={scenario.id} className="sample-tile">
             <div className="sample-number" aria-hidden="true">0{index + 1}</div>
             <div><span className="eyebrow">Case 0{index + 1} · Synthetic</span><h2>{scenario.title}</h2><p>{scenario.whatItShows}</p></div>
@@ -44,7 +45,8 @@ export function DemoPage() {
           </li>
         ))}
       </ul>
-      <section className="benchmark-ledger" aria-labelledby="ledger-title">
+      <button type="button" className="min-h-11 underline" onClick={() => setShowAll(!showAll)}>{showAll ? 'Show featured examples' : 'More examples'}</button>
+      <details className="evaluation-disclosure"><summary>Evaluation and technical details</summary><section className="benchmark-ledger" aria-labelledby="ledger-title">
         <div className="ledger-header">
           <div>
             <p className="eyebrow">Recorded evaluation &amp; security gates</p>
@@ -92,7 +94,7 @@ export function DemoPage() {
             </dl>
           </article>
         </div>
-      </section>
+      </section></details>
       <p className="mt-6 max-w-prose text-sm text-muted">Fictional senders, no employer affiliation. Live checks read public listing data; fixture replay uses labeled recorded evidence. This demo never authenticates the sender.</p>
     </div>
   );
