@@ -1,6 +1,6 @@
 # AI workflow evidence
 
-Updated 2026-11-07 after the user supplied the 5:07 PM CST manual-check screenshot.
+Updated 2026-11-08 after downloading the existing Grok Bot run log and inspecting its reported routine completion records.
 
 Cursor was the coding agent for this implementation. Nemotron is the application's inference engine and was not used to write the code. Provider smoke, a live sample check, the 24-case product evaluation, and the team-created prompt-only baseline completed against `nvidia/nemotron-3.5-super-vl-120b-a12b`.
 
@@ -8,9 +8,23 @@ Codex subsequently reviewed and refined the interface, fixed layout and focus is
 
 ## Grok Bot Source Watch
 
-An initial check was completed, and a routine named for this source watch was created to run every two hours in America/Chicago. Scheduled execution is not yet verified. The bot's `runs.jsonl` file is on the bot's cloud computer and is not in this repository.
+An initial check was completed, and a routine named for this source watch was created to run every two hours in America/Chicago. We retrieved the existing `runs.jsonl` attachment from Grok Bot without requesting a new check or modifying the log or schedule. The original downloaded contents are preserved in [grok-source-watch-runs.jsonl](evidence/grok-source-watch-runs.jsonl).
 
-The user supplied a screenshot of a second manual check at 5:07 PM CST on November 7. Grok Bot reported all three sources returned HTTP 200, no change since 4:47 PM CST, job `6143238004` titled “Software Engineer Intern (Summer 2027)”, an October 27 update date, and a permanent redirect of the board link to `job-boards.greenhouse.io`. It reported adding a second line to its cloud log. This is screenshot-reported evidence, not an independently downloaded log. The Bot explicitly said it ran the check manually, not through the scheduled routine; scheduled execution remains unverified. No caught source change is claimed.
+The file contains seven valid JSON records, all with `status: "ok"` and `notified: false`. The first two are the initial manual check and manual test. Five later records match the scheduled automation completion reports exposed by Grok Bot:
+
+| Check time (CST) | Execution |
+| --- | --- |
+| Nov 7, 16:47:51 | Initial manual baseline |
+| Nov 7, 17:07:10 | Manual test (`manual_test: true`) |
+| Nov 7, 18:06:19 | Scheduled completion report matches |
+| Nov 7, 20:03:45 | Scheduled completion report matches |
+| Nov 7, 22:03:28 | Scheduled completion report matches |
+| Nov 8, 00:06:20 | Scheduled completion report matches |
+| Nov 8, 02:07:31 | Scheduled completion report matches |
+
+Grok Bot also exposed a latest-run status of success, starting at 02:07:22 CST on November 8. Neither the log nor the exposed completion reports includes run IDs or per-line trigger metadata: scheduled attribution relies on matching timestamps and the Bot's automation completion records. This is evidence of completed source monitoring, not an independently audited scheduler. No source change or delivered alert is claimed. All seven records show the expected job ID/title and successful public-source responses.
+
+The earlier user screenshot documented only the second manual check at 5:07 PM CST on November 7. The downloaded file now corroborates that check and provides the five later records. The expected board redirect to `job-boards.greenhouse.io` remained unchanged. The original log is retained verbatim, including minor schema differences between earlier and later runs.
 
 The check covers these public pages:
 

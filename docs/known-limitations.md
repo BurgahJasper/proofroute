@@ -14,4 +14,4 @@
 - Conversation limits are 20 reviewed messages and 60,000 combined characters. No conversation history is silently truncated.
 - Deleting a case does not erase a downloaded export or data an inference provider may retain after a real key is used.
 - There is no public deployment yet. Render steps are in `docs/deployment.md` and have not been executed.
-- Grok Bot Source Watch completed an initial check, and a two-hour America/Chicago routine was created. Scheduled execution is not yet verified. Its `runs.jsonl` is on the bot's cloud computer. No source change has been recorded.
+- Grok Bot Source Watch has a downloaded seven-record run log: two manual checks and five later records matching Bot-exposed scheduled completion reports. Records lack run IDs and trigger metadata; see `docs/ai-workflow.md` for attribution limits. No source change or delivered alert has been recorded.
