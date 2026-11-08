@@ -12,8 +12,8 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
   useGSAP(() => {
     if (reduceMotion) return;
     const timeline = gsap.timeline();
-    timeline.from('.map-node', { y: 10, opacity: 0, duration: .3, stagger: .09, ease: 'power2.out' });
-    timeline.from('.map-connector', { scaleX: 0, transformOrigin: 'left', duration: .4 }, .15);
+    timeline.from(assessment.version === 1 ? '.map-node' : '.map-node[data-changed="true"]', { y: 10, opacity: 0, duration: .3, stagger: .09, ease: 'power2.out' });
+    if (assessment.version === 1) timeline.from('.map-connector', { scaleX: 0, transformOrigin: 'left', duration: .4 }, .15);
   }, { scope: root, dependencies: [assessment.version, reduceMotion], revertOnUpdate: true });
   return <div className="evidence-map" ref={root}>
     <div className="story-top"><span className="eyebrow">Your Proof Path</span><span className="preview-label">Version {assessment.version}</span></div>
@@ -25,7 +25,7 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
         const risk = key === 'request' && assessment.recommendedAction === 'pause_sensitive_action';
         return <Fragment key={key}>
           {index > 0 ? <span className={`map-connector ${key === 'sender' || key === 'request' ? 'uncertain' : ''}`} aria-hidden="true" /> : null}
-          <div className="map-stop"><button type="button" className="map-node" data-active={activeKey === key} disabled={!finding} onMouseEnter={() => onTrace(key)} onMouseLeave={() => onTrace(null)} onFocus={() => onTrace(key)} onBlur={() => onTrace(null)} onClick={() => finding && onSelect(finding)} aria-label={`${labels[key]}: ${risk ? 'risk detected' : finding?.status ?? 'unresolved'}. Inspect evidence.`}>
+          <div className="map-stop"><button type="button" className="map-node" data-changed={assessment.changeSummary?.changedClaimKeys.includes(key)} data-active={activeKey === key} disabled={!finding} onMouseEnter={() => onTrace(key)} onMouseLeave={() => onTrace(null)} onFocus={() => onTrace(key)} onBlur={() => onTrace(null)} onClick={() => finding && onSelect(finding)} aria-label={`${labels[key]}: ${risk ? 'risk detected' : finding?.status ?? 'unresolved'}. Inspect evidence.`}>
             <span className="map-symbol" data-status={risk ? 'contradicted' : finding?.status}>{risk ? '!' : finding?.status === 'supported' ? '✓' : finding?.status === 'contradicted' ? '!' : '?'}</span><strong>{labels[key]}</strong><span>{risk ? 'Risk detected' : key === 'request' && !assessment.errorCode && assessment.conversation && !assessment.conversation.requests.length ? 'No sensitive request found' : finding?.status ?? 'Unresolved'}</span>
           </button></div>
         </Fragment>;
