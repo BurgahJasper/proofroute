@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026-11-07.1",
-  "reviewedAt": "2026-11-07T21:52:00.000Z",
+  "catalogVersion": "2026-11-08.1",
+  "reviewedAt": "2026-11-08T06:36:41.919615+00:00",
   "employers": [
     {
       "id": "figma",
@@ -13,7 +13,9 @@
         "apiHost": "boards-api.greenhouse.io",
         "publicHost": "boards.greenhouse.io"
       },
-      "knownDomains": ["figma.com"],
+      "knownDomains": [
+        "figma.com"
+      ],
       "verificationContact": null,
       "provenance": {
         "careersPage": "https://www.figma.com/careers/",
@@ -23,6 +25,54 @@
         "seedListingId": "6143238004",
         "checkedAt": "2026-11-07T21:52:00.000Z",
         "note": "The Greenhouse API absolute_url host was boards.greenhouse.io. The earlier TRD seed used job-boards.greenhouse.io. ProofRoute recommends only the host returned by the API after an allowlist check."
+      }
+    },
+    {
+      "id": "gitlab",
+      "name": "GitLab",
+      "careersUrl": "https://about.gitlab.com/jobs/all-jobs/",
+      "careersSnapshot": "Reviewed 2026-11-08. The official jobs page includes greenhouse-static-data; the public Greenhouse gitlab board returns current GitLab roles. This is a reviewed snapshot, not a fresh fetch of the careers page. It establishes a public application route only; no recruiter is authenticated.",
+      "board": {
+        "provider": "greenhouse",
+        "token": "gitlab",
+        "apiHost": "boards-api.greenhouse.io",
+        "publicHost": "job-boards.greenhouse.io"
+      },
+      "knownDomains": [
+        "gitlab.com"
+      ],
+      "verificationContact": null,
+      "provenance": {
+        "careersPage": "https://about.gitlab.com/jobs/all-jobs/",
+        "seedListingId": "8638232002",
+        "seedListingTitle": "AI Transformation Owner, CRO",
+        "observedLink": "https://job-boards.greenhouse.io/gitlab/jobs/8638232002",
+        "checkedAt": "2026-11-08T06:36:41.919615+00:00",
+        "note": "The official jobs page includes greenhouse-static-data; the public Greenhouse gitlab board returns current GitLab roles."
+      }
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "careersUrl": "https://www.cloudflare.com/careers/jobs/",
+      "careersSnapshot": "Reviewed 2026-11-08. The official careers page lists open roles dynamically. Cloudflare\u2019s published candidate privacy notice identifies Greenhouse as its recruiting provider. The public cloudflare board returns current roles. This is a reviewed snapshot, not a fresh fetch of the careers page. It establishes a public application route only; no recruiter is authenticated.",
+      "board": {
+        "provider": "greenhouse",
+        "token": "cloudflare",
+        "apiHost": "boards-api.greenhouse.io",
+        "publicHost": "boards.greenhouse.io"
+      },
+      "knownDomains": [
+        "cloudflare.com"
+      ],
+      "verificationContact": null,
+      "provenance": {
+        "careersPage": "https://www.cloudflare.com/careers/jobs/",
+        "seedListingId": "7695702",
+        "seedListingTitle": "Account Executive, FedCiv",
+        "observedLink": "https://boards.greenhouse.io/cloudflare/jobs/7695702?gh_jid=7695702",
+        "checkedAt": "2026-11-08T06:36:41.919615+00:00",
+        "note": "The official careers page lists open roles dynamically. Cloudflare\u2019s published candidate privacy notice identifies Greenhouse as its recruiting provider. The public cloudflare board returns current roles."
       }
     }
   ]

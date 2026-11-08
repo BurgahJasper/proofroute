@@ -8,6 +8,8 @@ import {
   deleteCase,
   ensureSession,
   getCase,
+  getEmployers,
+  type EmployerOption,
   getScenarios,
   startRun,
   type CaseSnapshot,
@@ -18,6 +20,8 @@ import { AnalysisBadge, ModeBadge, StatusPill, useUi } from '../ui';
 import { EvidenceMap, DecisionChange } from '../components/EvidenceMap';
 import { NextStep } from '../components/NextStep';
 import { ConversationTimeline } from '../components/ConversationTimeline';
+
+import { SenderComparison } from '../components/SenderComparison';
 
 const STEPS = ['Read', 'Check sources', 'Compare', 'Next step'] as const;
 const CLAIM_TITLES = { employer_route: 'Employer route', listing: 'Published role', sender: 'Sender identity', request: 'Requested action' };
@@ -71,6 +75,8 @@ export function CasePage() {
   const claimButton = useRef<HTMLButtonElement | null>(null);
   const [snapshot, setSnapshot] = useState<CaseSnapshot | null>(null);
   const [error, setError] = useState('');
+  const [employers, setEmployers] = useState<EmployerOption[]>([]);
+  useEffect(() => { let active = true; void getEmployers().then(rows => { if (active) setEmployers(rows); }).catch(() => {}); return () => { active = false; }; }, []);
   const [selected, setSelected] = useState<Finding | null>(null);
   const [tracedKey, setTracedKey] = useState<Finding['claimKey'] | null>(null);
   const [tracedQuote, setTracedQuote] = useState('');
@@ -244,6 +250,7 @@ export function CasePage() {
       <div className="case-workspace mt-6" aria-busy={running}>
         <section className="case-evidence" aria-label="Evidence">
       {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
+        <SenderComparison text={snapshot?.messages?.[0]?.text ?? snapshot?.version.reviewedText ?? ''} employer={employers.find(e => e.id === snapshot?.version.employerId)} />
         <MessagePane text={message} quotes={quotes} activeQuote={tracedQuote || assessment?.findings.find(item => item.claimKey === tracedKey)?.inputSpan?.quote} />
 
           <div className="evidence-section-heading">
@@ -259,7 +266,7 @@ export function CasePage() {
           {assessment ? <EvidenceMap assessment={assessment} onSelect={setSelected} onTrace={(key) => { setTracedKey(key); setTracedQuote(''); }} activeKey={tracedKey} /> : <div className="investigation-wait" role="status"><div className="wait-orbit" aria-hidden="true"><span>?</span></div><h3>Building your Proof Path</h3><p>{STEPS[stage]} · Evidence appears after the checks finish.</p><span>No conclusion yet. A match will never verify the sender.</span></div>}
           {assessment?.candidateChoices?.length ? <section className="candidate-picker"><h3>Which published role did you mean?</h3><p>We could not establish one exact match. Choose a role to read its official listing, or keep the result unresolved.</p>{assessment.candidateChoices.map(candidate => <button type="button" key={candidate.jobId} disabled={busy || running} onClick={() => void recheck(candidate.jobId)}><strong>{candidate.title}</strong><span>{candidate.location || 'Location not listed'} · Read this role →</span></button>)}</section> : null}
           {assessment?.matchedBy === 'model' ? <p className="model-match-note">Role suggested by Nemotron from the published board. Confirm the title and location; this does not establish that the message refers to that role.</p> : null}
-          <div className="space-y-3">
+          <details className="finding-details"><summary>Inspect all findings and sources</summary><div className="space-y-3">
             {(assessment?.findings ?? []).map((finding, index) => (
               <article
                 key={finding.claimId}
@@ -291,7 +298,7 @@ export function CasePage() {
                 </button>
               </article>
             ))}
-          </div>
+          </div></details>
         </section>
         <aside className="case-sidebar">
           <NextStep assessment={assessment} caseId={caseId} loading={loading} providerConfigured={Boolean(snapshot?.providerConfigured)} />
