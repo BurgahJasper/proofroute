@@ -650,3 +650,8 @@ main:focus { outline: none; }
 .guardrail-strip .eyebrow { flex-shrink:0; }
 .guardrail-limitations { overflow-wrap:anywhere; }
 .image-quote-choices button { max-width:100%; overflow-wrap:anywhere; }
+
+.screenshot-samples > .screenshot-sample-list { display:block; max-width:720px; text-decoration:none; }
+.screenshot-sample-row { display:flex; justify-content:space-between; gap:16px; border-top:1px solid var(--color-line); padding:6px 0; }
+.screenshot-sample-row > a:first-child { flex:1; justify-content:space-between; gap:20px; color:var(--color-action); font-weight:500; }
+.screenshot-sample-row > a:last-child { font-size:12px; color:var(--color-muted); text-decoration:underline; text-underline-offset:4px; }
