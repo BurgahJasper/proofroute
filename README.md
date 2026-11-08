@@ -60,6 +60,10 @@ Hosted Nemotron is the default. The verified model id is `nvidia/nemotron-3.5-su
 5. The next step is the official application URL from that board, or the careers page when the role was not found. A risky payment, password, login code, check, or identifier request pauses even if the listing is real.
 6. A follow-up message creates the next version. Exports are redacted Markdown and JSON.
 
+Conversation-aware checks now read all reviewed messages, retain earlier quote-backed sensitive requests, and identify the first message requiring a pause. Nemotron can interpret indirect requests; patterns remain available during provider failures. Without a requisition, a bounded board search can lead to a model-selected detail lookup. Ambiguous roles require a user choice. Model-suggested roles stay labeled and never authenticate the sender.
+
+Start with **The moment the conversation changes** in Samples for the new live demonstration. See `docs/conversation-upgrade.md` for verification and limits. `scripts/verify-conversation-live.ts` writes a separate smoke report under `verification/`; it does not replace the frozen evaluation.
+
 Fixture replay is labeled and does not call Greenhouse. Live, fixture, and cached results stay labeled in the interface and the export.
 
 ## Source limit

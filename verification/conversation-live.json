@@ -1,0 +1,487 @@
+{
+  "measuredAt": "2026-11-08T00:29:01.939Z",
+  "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+  "kind": "Four synthetic smoke steps, not a benchmark or accuracy estimate",
+  "results": [
+    {
+      "label": "Role lookup without a requisition",
+      "durationMs": 2545,
+      "status": "complete",
+      "analysisMode": "nemotron",
+      "action": "use_official_route",
+      "firstSensitiveVersion": null,
+      "requests": [],
+      "matchedBy": "model",
+      "candidateCount": 0,
+      "listing": {
+        "claimId": "claim_listing",
+        "claimKey": "listing",
+        "question": "Is the referenced role published on that route?",
+        "inputSpan": {
+          "start": 0,
+          "end": 0,
+          "quote": ""
+        },
+        "status": "supported",
+        "evidenceIds": [
+          "9f57984bf752d120a1741c245f50b0ca"
+        ],
+        "explanation": "Model-suggested role: Software Engineer Intern (Summer 2027). This role is published; whether it is the role intended in the message remains unconfirmed. It does not verify the sender."
+      },
+      "tools": [
+        {
+          "sequence": 3,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "resolveEmployer",
+            "purpose": "Read the reviewed employer catalog entry.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 4,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "resolveEmployer",
+            "durationMs": 0,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 5,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "getApprovedRecruitingPage",
+            "purpose": "Read the reviewed careers-page snapshot.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 6,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "getApprovedRecruitingPage",
+            "durationMs": 0,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 7,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "listPublishedJobs",
+            "purpose": "List published jobs because no exact job ID was confirmed.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 8,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "compareRoleCandidates",
+            "proposedBy": "model",
+            "purpose": "Compare the claimed role with roles returned by the employer-linked board."
+          }
+        },
+        {
+          "sequence": 9,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "compareRoleCandidates",
+            "proposedBy": "model",
+            "source": "greenhouse",
+            "durationMs": 651,
+            "purpose": "Read candidate 6143238004 next. The role match is model-suggested.",
+            "comparison": "The title matches exactly as Software Engineer Intern (Summer 2027), and San Francisco is included in the listed locations."
+          }
+        },
+        {
+          "sequence": 10,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "listPublishedJobs",
+            "durationMs": 756,
+            "proposedBy": "server",
+            "source": "greenhouse"
+          }
+        },
+        {
+          "sequence": 11,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "getPublishedJob",
+            "purpose": "Read the model-suggested role from the returned board results.",
+            "proposedBy": "model"
+          }
+        },
+        {
+          "sequence": 12,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "getPublishedJob",
+            "durationMs": 69,
+            "proposedBy": "model",
+            "source": "greenhouse"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Indirect transfer request",
+      "durationMs": 2525,
+      "status": "complete",
+      "analysisMode": "nemotron",
+      "action": "pause_sensitive_action",
+      "firstSensitiveVersion": 2,
+      "requests": [
+        {
+          "messageVersion": 2,
+          "category": "sensitive_identifier",
+          "quote": "Keep 200 and transfer the remainder to our supplier.",
+          "actor": "sender",
+          "action": "transfer funds",
+          "asset": "remainder of funds",
+          "destination": "supplier",
+          "label": "sensitive identifier",
+          "start": 198,
+          "end": 250,
+          "origin": "model"
+        }
+      ],
+      "matchedBy": "model",
+      "candidateCount": 0,
+      "listing": {
+        "claimId": "claim_listing",
+        "claimKey": "listing",
+        "question": "Is the referenced role published on that route?",
+        "inputSpan": {
+          "start": 0,
+          "end": 0,
+          "quote": ""
+        },
+        "status": "supported",
+        "evidenceIds": [
+          "c2f367edae1031d756e2829857a6dfdc"
+        ],
+        "explanation": "Model-suggested role: Software Engineer Intern (Summer 2027). This role is published; whether it is the role intended in the message remains unconfirmed. It does not verify the sender."
+      },
+      "tools": [
+        {
+          "sequence": 3,
+          "type": "tool.started",
+          "payload": {
+            "version": 2,
+            "tool": "resolveEmployer",
+            "purpose": "Read the reviewed employer catalog entry.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 4,
+          "type": "tool.completed",
+          "payload": {
+            "version": 2,
+            "tool": "resolveEmployer",
+            "durationMs": 0,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 5,
+          "type": "tool.started",
+          "payload": {
+            "version": 2,
+            "tool": "getApprovedRecruitingPage",
+            "purpose": "Read the reviewed careers-page snapshot.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 6,
+          "type": "tool.completed",
+          "payload": {
+            "version": 2,
+            "tool": "getApprovedRecruitingPage",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 7,
+          "type": "tool.started",
+          "payload": {
+            "version": 2,
+            "tool": "getPublishedJob",
+            "purpose": "Look up the confirmed job ID on the employer-linked board.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 8,
+          "type": "tool.completed",
+          "payload": {
+            "version": 2,
+            "tool": "getPublishedJob",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "greenhouse"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Harmless reply retains pause",
+      "durationMs": 2263,
+      "status": "complete",
+      "analysisMode": "nemotron",
+      "action": "pause_sensitive_action",
+      "firstSensitiveVersion": 2,
+      "requests": [
+        {
+          "messageVersion": 2,
+          "category": "sensitive_identifier",
+          "quote": "Keep 200 and transfer the remainder to our supplier.",
+          "actor": "sender",
+          "action": "transfer funds",
+          "asset": "remainder of funds",
+          "destination": "supplier",
+          "label": "sensitive identifier",
+          "start": 198,
+          "end": 250,
+          "origin": "model"
+        }
+      ],
+      "matchedBy": "model",
+      "candidateCount": 0,
+      "listing": {
+        "claimId": "claim_listing",
+        "claimKey": "listing",
+        "question": "Is the referenced role published on that route?",
+        "inputSpan": {
+          "start": 0,
+          "end": 0,
+          "quote": ""
+        },
+        "status": "supported",
+        "evidenceIds": [
+          "8325b20caedc04795c409d211e133caf"
+        ],
+        "explanation": "Model-suggested role: Software Engineer Intern (Summer 2027). This role is published; whether it is the role intended in the message remains unconfirmed. It does not verify the sender."
+      },
+      "tools": [
+        {
+          "sequence": 4,
+          "type": "tool.started",
+          "payload": {
+            "version": 3,
+            "tool": "resolveEmployer",
+            "purpose": "Read the reviewed employer catalog entry.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 5,
+          "type": "tool.completed",
+          "payload": {
+            "version": 3,
+            "tool": "resolveEmployer",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 6,
+          "type": "tool.started",
+          "payload": {
+            "version": 3,
+            "tool": "getApprovedRecruitingPage",
+            "purpose": "Read the reviewed careers-page snapshot.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 7,
+          "type": "tool.completed",
+          "payload": {
+            "version": 3,
+            "tool": "getApprovedRecruitingPage",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 8,
+          "type": "tool.started",
+          "payload": {
+            "version": 3,
+            "tool": "getPublishedJob",
+            "purpose": "Look up the confirmed job ID on the employer-linked board.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 9,
+          "type": "tool.completed",
+          "payload": {
+            "version": 3,
+            "tool": "getPublishedJob",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "greenhouse"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Protective warning",
+      "durationMs": 3028,
+      "status": "complete",
+      "analysisMode": "nemotron",
+      "action": "use_official_route",
+      "firstSensitiveVersion": null,
+      "requests": [],
+      "matchedBy": "model",
+      "candidateCount": 0,
+      "listing": {
+        "claimId": "claim_listing",
+        "claimKey": "listing",
+        "question": "Is the referenced role published on that route?",
+        "inputSpan": {
+          "start": 0,
+          "end": 0,
+          "quote": ""
+        },
+        "status": "supported",
+        "evidenceIds": [
+          "a814ff4a50ddaa1dedd308b3d2692bf8"
+        ],
+        "explanation": "Model-suggested role: Software Engineer Intern (Summer 2027). This role is published; whether it is the role intended in the message remains unconfirmed. It does not verify the sender."
+      },
+      "tools": [
+        {
+          "sequence": 3,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "resolveEmployer",
+            "purpose": "Read the reviewed employer catalog entry.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 4,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "resolveEmployer",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 5,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "getApprovedRecruitingPage",
+            "purpose": "Read the reviewed careers-page snapshot.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 6,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "getApprovedRecruitingPage",
+            "durationMs": 1,
+            "proposedBy": "server",
+            "source": "catalog"
+          }
+        },
+        {
+          "sequence": 7,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "listPublishedJobs",
+            "purpose": "List published jobs because no exact job ID was confirmed.",
+            "proposedBy": "server"
+          }
+        },
+        {
+          "sequence": 8,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "compareRoleCandidates",
+            "proposedBy": "model",
+            "purpose": "Compare the claimed role with roles returned by the employer-linked board."
+          }
+        },
+        {
+          "sequence": 9,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "compareRoleCandidates",
+            "proposedBy": "model",
+            "source": "greenhouse",
+            "durationMs": 885,
+            "purpose": "Read candidate 6143238004 next. The role match is model-suggested.",
+            "comparison": "The claimed role is Software Engineer Intern (Summer 2027) in San Francisco. Candidate 6143238004 matches the title exactly, includes Summer 2027, and lists San Francisco among its locations. Candidate 6152695004 is in London, so it does not match the stated San Francisco location. All other candida"
+          }
+        },
+        {
+          "sequence": 10,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "listPublishedJobs",
+            "durationMs": 985,
+            "proposedBy": "server",
+            "source": "greenhouse"
+          }
+        },
+        {
+          "sequence": 11,
+          "type": "tool.started",
+          "payload": {
+            "version": 1,
+            "tool": "getPublishedJob",
+            "purpose": "Read the model-suggested role from the returned board results.",
+            "proposedBy": "model"
+          }
+        },
+        {
+          "sequence": 12,
+          "type": "tool.completed",
+          "payload": {
+            "version": 1,
+            "tool": "getPublishedJob",
+            "durationMs": 1,
+            "proposedBy": "model",
+            "source": "greenhouse"
+          }
+        }
+      ]
+    }
+  ]
+}

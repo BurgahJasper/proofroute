@@ -13,7 +13,7 @@ export function DemoPage() {
   }, []);
   return (
     <div className="sample-page">
-      <p className="eyebrow">The field guide / Three fictional conversations</p>
+      <p className="eyebrow">The field guide / Fictional conversations</p>
       <h1>A convincing message.<br /><span className="text-action">An important distinction.</span></h1>
       <p className="mt-5 max-w-prose text-muted">Explore the gray areas of a recruiting conversation. Start with a sample, inspect the evidence, then add a follow-up to see what changes.</p>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}

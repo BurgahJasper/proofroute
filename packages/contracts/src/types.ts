@@ -1,4 +1,4 @@
-export const POLICY_VERSION = '2026-11-07.1';
+export const POLICY_VERSION = '2026-11-08.1';
 
 export type ClaimStatus = 'supported' | 'contradicted' | 'unresolved' | 'conflicting';
 export type Action = 'pause_sensitive_action' | 'verify_independently' | 'use_official_route';
@@ -77,6 +77,14 @@ export interface ChangeSummary {
 }
 
 export interface AssessmentDraft {
+  conversation?: {
+    messageCount: number;
+    firstSensitiveVersion: number | null;
+    requests: Array<RiskHit & { messageVersion: number; origin: 'pattern' | 'model'; actor: string; action: string; asset: string; destination: string }>;
+  };
+  candidateChoices?: ListingCandidate[];
+  matchedBy?: 'reference' | 'model';
+  matchedJobId?: string;
   status: 'complete' | 'partial';
   inputMode: InputMode;
   sourceMode: SourceMode | 'mixed';

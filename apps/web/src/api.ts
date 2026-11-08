@@ -59,6 +59,13 @@ export interface RouteLink {
 }
 
 export interface Assessment {
+  conversation?: {
+    messageCount: number;
+    firstSensitiveVersion: number | null;
+    requests: Array<{ messageVersion: number; category: string; label: string; quote: string; origin: 'pattern' | 'model'; actor: string; action: string; asset: string; destination: string }>;
+  };
+  candidateChoices?: Array<{ jobId: string; title: string; location?: string; url: string }>;
+  matchedBy?: 'reference' | 'model';
   headline: string;
   recommendedAction: string;
   reasons: string[];
@@ -91,6 +98,8 @@ export interface Assessment {
 }
 
 export interface CaseSnapshot {
+  conversationText?: string;
+  messages?: Array<{ version: number; text: string }>;
   case: {
     id: string;
     title: string;

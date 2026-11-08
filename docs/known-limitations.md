@@ -8,7 +8,10 @@
 - The prompt-only baseline matched 17 of 24 recommendation labels. The other 7 are recommendation mismatches on official-route cases, not API failures. That comparison is not a scam-detection rate. Labels were written by one person.
 - No volunteer session has been run. `eval/user-tasks.csv` has a header and no participants.
 - The careers page is not fetched during a check. The catalog stores a reviewed snapshot. Job JSON is fetched from the fixed Greenhouse API host, and redirects are not followed.
-- Pattern detection can miss a paraphrased payment request and can pause if a benign message uses words like "login code" or "processing fee".
+- Live checks supplement patterns with quote-validated Nemotron request extraction across reviewed messages. Both can still miss or misinterpret language. Standalone protective instructions receive a narrow pattern exception; this is not general negation understanding. Fixture and failed-provider checks cannot reliably interpret indirect new requests.
+- Earlier sensitive requests stay unresolved across later replies. There is no authenticated resolution mechanism, so this build does not automatically clear an earlier pause. Rechecks retain previous contextual findings.
+- Model-suggested roles are not confirmed message-to-job matches. Ambiguous candidates require user selection. Board scans consider up to 1,000 records and show up to 12 ranked candidates.
+- Conversation limits are 20 reviewed messages and 60,000 combined characters. No conversation history is silently truncated.
 - Deleting a case does not erase a downloaded export or data an inference provider may retain after a real key is used.
 - There is no public deployment yet. Render steps are in `docs/deployment.md` and have not been executed.
 - Grok Bot Source Watch completed an initial check, and a two-hour America/Chicago routine was created. Scheduled execution is not yet verified. Its `runs.jsonl` is on the bot's cloud computer. No source change has been recorded.

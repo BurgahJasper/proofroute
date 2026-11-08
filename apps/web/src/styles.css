@@ -331,6 +331,46 @@ html[data-reduced-motion="true"] *, html[data-reduced-motion="true"] *::before, 
 .source-outbound:hover { background: #ebe7f6; }
 .source-record li { margin-top: 7px; font-size: 12px; line-height: 1.7; }
 main:focus { outline: none; }
+.conversation-timeline { margin-top: 24px; border: 1px solid var(--color-line); border-radius: 14px; background: white; padding: 24px; }
+.conversation-intro { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+.conversation-intro h2 { font: 30px/1.15 var(--font-editorial); margin-top: 8px; }
+.conversation-stops { display: flex; gap: 12px; overflow-x: auto; padding: 20px 4px 14px; }
+.conversation-stops button { flex: 0 0 160px; text-align: left; border: 1px solid var(--color-line); padding: 12px; border-radius: 10px; min-height: 100px; }
+.conversation-stops button[aria-pressed="true"] { border-color: var(--color-action); background: #f5f2fc; }
+.conversation-stops strong, .conversation-stops button > span:last-child { display: block; font-size: 12px; margin-top: 5px; }
+.conversation-stops button > span:last-child { color: var(--color-muted); font-size: 11px; }
+.timeline-dot { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: #eceaf4; font: 12px var(--font-mono); }
+[data-sensitive="true"] .timeline-dot { background: var(--color-danger-soft); color: var(--color-danger); }
+.conversation-detail { background: var(--color-paper); border-radius: 10px; padding: 20px; }
+.conversation-detail > div + div { border-top: 1px solid var(--color-line); margin-top: 16px; padding-top: 16px; }
+.request-quote { display: block; text-align: left; font: 24px/1.35 var(--font-editorial); min-height: 44px; margin: 10px 0 16px; overflow-wrap: anywhere; }
+.request-quote:hover { color: var(--color-action); }
+.request-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; font-size: 12px; }
+.request-facts dt { color: var(--color-muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+.request-facts dd { overflow-wrap: anywhere; }
+.retained-warning { margin-top: 16px; color: var(--color-caution); font-size: 12px; }
+.timeline-message { white-space: pre-wrap; max-height: 140px; overflow-y: auto; font-size: 13px; margin: 10px 0; overflow-wrap: anywhere; }
+.proof-route-label { margin: 16px 0 8px; font: 10px var(--font-mono); color: var(--color-muted); }
+.map-nodes.split-path { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.authority-gap { display: flex; align-items: center; gap: 14px; padding: 13px; border: 1px dashed #a99fc6; background: #ffffff90; border-radius: 8px; margin-top: 18px; }
+.authority-gap > span { font-size: 30px; color: var(--color-action); }
+.authority-gap p { font-size: 12px; line-height: 1.6; }
+.authority-gap strong { display: block; }
+.candidate-picker { padding: 18px; background: white; border: 1px solid var(--color-line); border-radius: 12px; margin-bottom: 16px; }
+.candidate-picker h3 { font: 23px var(--font-editorial); }
+.candidate-picker p, .model-match-note { font-size: 12px; line-height: 1.6; margin: 10px 0; }
+.candidate-picker button { display: block; width: 100%; min-height: 44px; border: 1px solid var(--color-line); border-radius: 8px; text-align: left; padding: 12px; margin-top: 10px; font-size: 12px; }
+.candidate-picker button span { display: block; color: var(--color-muted); margin-top: 5px; }
+.candidate-picker button:hover:not(:disabled) { border-color: var(--color-action); }
+.model-match-note { padding: 12px; border-left: 2px solid var(--color-action); background: #f5f2fc; }
+@media (max-width: 760px) {
+  .conversation-timeline { padding: 16px; }
+  .conversation-intro { flex-direction: column; }
+  .conversation-intro h2 { font-size: 26px; }
+  .conversation-detail { padding: 14px; }
+  .request-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .request-quote { font-size: 21px; }
+}
 .map-symbol { transition: box-shadow .2s ease, transform .2s ease; }
 .map-node[data-active="true"] .map-symbol { box-shadow: 0 0 0 5px #4338ca16; transform: translateY(-3px); }
 .evidence-card[data-traced="true"] { border-color: #8b7acd; box-shadow: 0 4px 20px #4338ca0b; }

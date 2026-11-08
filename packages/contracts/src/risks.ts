@@ -48,7 +48,15 @@ export function detectRisks(text: string): RiskHit[] {
   const hits: RiskHit[] = [];
   const seen = new Set<string>();
   for (const rule of RULES) {
-    const match = rule.pattern.exec(text);
+    const match = [...text.matchAll(new RegExp(rule.pattern.source, 'gi'))].find(candidate => {
+      const index = candidate.index ?? 0;
+      const sentenceStart = Math.max(text.lastIndexOf('.', index - 1), text.lastIndexOf('\n', index - 1), text.lastIndexOf('!', index - 1), text.lastIndexOf(':', index - 1)) + 1;
+      const tail = text.slice(sentenceStart).split(/[.!?\n]/, 1)[0].trim();
+      // Only suppress standalone protective instructions. A second request in the
+      // same sentence ("never share it, but send it here") must still be reviewed.
+      const protective = /^(?:never|do not|don't)\s+(?:send|share|provide|give|enter|pay|wire|transfer|upload)\b|^we\s+(?:will\s+)?never\s+ask\b/i.test(tail);
+      return !(protective && !/\b(?:but|however|except|instead|then|also|and)\b|[,;:\u2014\u2013]/i.test(tail));
+    });
     if (!match || match.index < 0) continue;
     if (seen.has(rule.category)) continue;
     seen.add(rule.category);

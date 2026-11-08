@@ -123,6 +123,17 @@ export const EXTRACTION_SCHEMA: Record<string, unknown> = {
     jobId: { type: 'string' },
     senderDomain: { type: 'string' },
     requestedActionQuotes: { type: 'array', items: { type: 'string' } },
+    requests: {
+      type: 'array', items: {
+        type: 'object', additionalProperties: false,
+        properties: {
+          messageVersion: { type: 'integer' },
+          category: { type: 'string', enum: ['password', 'otp', 'payment', 'check_forwarding', 'sensitive_identifier'] },
+          quote: { type: 'string' }, actor: { type: 'string' }, action: { type: 'string' },
+          asset: { type: 'string' }, destination: { type: 'string' },
+        }, required: ['messageVersion', 'category', 'quote', 'actor', 'action', 'asset', 'destination'],
+      },
+    },
     toolCalls: {
       type: 'array',
       items: {
@@ -142,7 +153,13 @@ export const EXTRACTION_SCHEMA: Record<string, unknown> = {
     },
     reasons: { type: 'array', items: { type: 'string' } },
   },
-  required: ['roleTitle', 'jobId', 'senderDomain', 'requestedActionQuotes', 'toolCalls', 'reasons'],
+  required: ['roleTitle', 'jobId', 'senderDomain', 'requestedActionQuotes', 'requests', 'toolCalls', 'reasons'],
+};
+
+export const CANDIDATE_SCHEMA: Record<string, unknown> = {
+  type: 'object', additionalProperties: false,
+  properties: { jobId: { type: 'string' }, ambiguous: { type: 'boolean' }, reason: { type: 'string' } },
+  required: ['jobId', 'ambiguous', 'reason'],
 };
 
 export const SYNTHESIS_SCHEMA: Record<string, unknown> = {

@@ -17,6 +17,7 @@ import {
 import { AnalysisBadge, ModeBadge, StatusPill, useUi } from '../ui';
 import { EvidenceMap, DecisionChange } from '../components/EvidenceMap';
 import { NextStep } from '../components/NextStep';
+import { ConversationTimeline } from '../components/ConversationTimeline';
 
 const STEPS = ['Read', 'Check sources', 'Compare', 'Next step'] as const;
 const CLAIM_TITLES = { employer_route: 'Employer route', listing: 'Published role', sender: 'Sender identity', request: 'Requested action' };
@@ -72,6 +73,7 @@ export function CasePage() {
   const [error, setError] = useState('');
   const [selected, setSelected] = useState<Finding | null>(null);
   const [tracedKey, setTracedKey] = useState<Finding['claimKey'] | null>(null);
+  const [tracedQuote, setTracedQuote] = useState('');
   const closeSources = useCallback(() => setSelected(null), []);
   const [followUp, setFollowUp] = useState('');
   const [sampleFollowUp, setSampleFollowUp] = useState('');
@@ -142,18 +144,18 @@ export function CasePage() {
   const stage = stageIndex(snapshot);
   const checkingJobs = snapshot?.events.some((event) => event.type === 'tool.started' && String(event.payload.tool).includes('Job')) && stage < 3;
   const elapsed = snapshot?.run?.startedAt ? Math.max(0, Math.round((Date.now() - Date.parse(snapshot.run.startedAt)) / 1000)) : 0;
-  const quotes = assessment?.findings.map((finding) => finding.inputSpan?.quote || '') ?? [];
-  const message = snapshot?.version.reviewedText ?? '';
+  const quotes = [...(assessment?.findings.map((finding) => finding.inputSpan?.quote || '') ?? []), ...(assessment?.conversation?.requests.map(r => r.quote) ?? [])];
+  const message = snapshot?.conversationText ?? snapshot?.version.reviewedText ?? '';
   const cache = snapshot?.evidence.find((item) => item.scope === 'listing')?.cacheStatus;
   const mode = assessment?.sourceMode || snapshot?.case.sourcePreference || 'live';
   const running = Boolean(snapshot?.run && ['queued', 'running'].includes(snapshot.run.status));
 
-  async function recheck() {
+  async function recheck(jobId?: string) {
     if (busy || running || !snapshot) return;
     setBusy(true);
     setError('');
     try {
-      await startRun(caseId, { refresh: true });
+      await startRun(caseId, { refresh: true, jobId });
       setSelected(null);
       setSnapshot(await getCase(caseId));
     } catch (reason) {
@@ -240,8 +242,9 @@ export function CasePage() {
       ) : null}
 
       {assessment ? <DecisionChange assessment={assessment} previous={snapshot?.previousAssessment} /> : null}
+      {assessment && snapshot?.messages ? <ConversationTimeline assessment={assessment} messages={snapshot.messages} onTrace={(quote) => { setTracedQuote(quote); setTracedKey('request'); }} /> : null}
       <div className="case-workspace mt-6" aria-busy={running}>
-        <MessagePane text={message} quotes={quotes} activeQuote={assessment?.findings.find(item => item.claimKey === tracedKey)?.inputSpan?.quote} />
+        <MessagePane text={message} quotes={quotes} activeQuote={tracedQuote || assessment?.findings.find(item => item.claimKey === tracedKey)?.inputSpan?.quote} />
         <section className="order-2" aria-label="Evidence">
           <div className="evidence-section-heading">
             <h2 className="text-lg font-semibold">What the sources show</h2>
@@ -253,7 +256,9 @@ export function CasePage() {
               <p className="text-sm text-muted">{loading ? 'Loading this check.' : 'Waiting for the check.'}</p>
             )}
           </div>
-          {assessment ? <EvidenceMap assessment={assessment} onSelect={setSelected} onTrace={setTracedKey} activeKey={tracedKey} /> : <div className="investigation-wait" role="status"><div className="wait-orbit" aria-hidden="true"><span>?</span></div><h3>Building your Proof Path</h3><p>{STEPS[stage]} · Evidence appears after the checks finish.</p><span>No conclusion yet. A match will never verify the sender.</span></div>}
+          {assessment ? <EvidenceMap assessment={assessment} onSelect={setSelected} onTrace={(key) => { setTracedKey(key); setTracedQuote(''); }} activeKey={tracedKey} /> : <div className="investigation-wait" role="status"><div className="wait-orbit" aria-hidden="true"><span>?</span></div><h3>Building your Proof Path</h3><p>{STEPS[stage]} · Evidence appears after the checks finish.</p><span>No conclusion yet. A match will never verify the sender.</span></div>}
+          {assessment?.candidateChoices?.length ? <section className="candidate-picker"><h3>Which published role did you mean?</h3><p>We could not establish one exact match. Choose a role to read its official listing, or keep the result unresolved.</p>{assessment.candidateChoices.map(candidate => <button type="button" key={candidate.jobId} disabled={busy || running} onClick={() => void recheck(candidate.jobId)}><strong>{candidate.title}</strong><span>{candidate.location || 'Location not listed'} · Read this role →</span></button>)}</section> : null}
+          {assessment?.matchedBy === 'model' ? <p className="model-match-note">Role suggested by Nemotron from the published board. Confirm the title and location; this does not establish that the message refers to that role.</p> : null}
           <div className="space-y-3">
             {(assessment?.findings ?? []).map((finding, index) => (
               <article
@@ -352,11 +357,11 @@ function MessagePane({ text, quotes, activeQuote }: { text: string; quotes: stri
   return (
     <>
       <section className="order-3 hidden rounded-panel border border-line bg-surface p-4 md:block min-[1100px]:order-1">
-        <h2 className="text-sm font-medium">Reviewed message</h2>
+        <h2 className="text-sm font-medium">Reviewed conversation</h2>
         <div className="mt-3 text-sm">{body}</div>
       </section>
       <details className="order-4 rounded-panel border border-line bg-surface p-4 md:hidden">
-        <summary className="min-h-11 cursor-pointer font-medium">Original message</summary>
+        <summary className="min-h-11 cursor-pointer font-medium">Reviewed conversation</summary>
         <div className="mt-3 text-sm">{body}</div>
       </details>
     </>
@@ -364,7 +369,7 @@ function MessagePane({ text, quotes, activeQuote }: { text: string; quotes: stri
 }
 
 function Activity({ events }: { events: CaseSnapshot['events'] }) {
-  const names: Record<string, string> = { getPublishedJob: 'Read the public job listing', listPublishedJobs: 'Look up published roles', compareClaimedDomain: 'Compare the claimed domain', getEmployerProfile: 'Check the reviewed employer', getApprovedRecruitingPage: 'Find the official careers route' };
+  const names: Record<string, string> = { compareRoleCandidates: 'Compare returned roles before choosing the next check', getPublishedJob: 'Read the public job listing', listPublishedJobs: 'Look up published roles', compareClaimedDomain: 'Compare the claimed domain', resolveEmployer: 'Check the reviewed employer', getApprovedRecruitingPage: 'Find the official careers route' };
   const rows = events.filter((event) => event.type.startsWith('tool.') || event.type === 'claims.extracted');
   if (!rows.length) return null;
   return (

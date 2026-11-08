@@ -197,7 +197,7 @@ export async function lookupPublishedJob(options: {
     const response = await fetchGreenhouse(url, options.signal, options.timeoutMs);
     if (!response.ok) throw new Error(`status ${response.status}`);
     const parsed = JSON.parse(await readBody(response)) as { jobs?: Array<Record<string, unknown>> };
-    const candidates = (parsed.jobs ?? []).slice(0, 30).flatMap((job) => {
+    const candidates = (parsed.jobs ?? []).slice(0, 1000).flatMap((job) => {
       const normalized = normalizeJob(job, options.token, retrievedAt, 'miss');
       if (!normalized?.approvedUrl) return [];
       return [{ jobId: normalized.id, title: normalized.title, location: normalized.location, url: normalized.approvedUrl }];

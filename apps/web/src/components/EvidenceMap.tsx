@@ -17,8 +17,10 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
   }, { scope: root, dependencies: [assessment.version, reduceMotion], revertOnUpdate: true });
   return <div className="evidence-map" ref={root}>
     <div className="story-top"><span className="eyebrow">Your Proof Path</span><span className="preview-label">Version {assessment.version}</span></div>
-    <div className="map-nodes">
-      {(['employer_route', 'listing', 'sender', 'request'] as const).map((key, index) => {
+    {([['employer_route', 'listing'], ['sender', 'request']] as const).map((path, pathIndex) => <div className="proof-route" key={pathIndex}>
+      <p className="proof-route-label">{pathIndex === 0 ? 'The opportunity · independent sources' : 'The conversation · claims and requests'}</p>
+      <div className="map-nodes split-path">
+      {path.map((key, index) => {
         const finding = assessment.findings.find(item => item.claimKey === key);
         const risk = key === 'request' && assessment.recommendedAction === 'pause_sensitive_action';
         return <div className="map-stop" key={key}>
@@ -28,8 +30,10 @@ export function EvidenceMap({ assessment, onSelect, onTrace, activeKey }: { asse
           </button>
         </div>;
       })}
-    </div>
-    <p className="map-caption">Follow any point to its evidence. The sender’s connection stays unverified.</p>
+      </div>
+      {pathIndex === 0 ? <div className="authority-gap"><span aria-hidden="true">↛</span><p><strong>The missing connection</strong>A published vacancy does not prove this sender represents the employer.</p></div> : null}
+    </div>)}
+    <p className="map-caption">Inspect the request to see its evidence. The official application remains an independent way forward.</p>
   </div>;
 }
 

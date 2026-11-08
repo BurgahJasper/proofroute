@@ -1,0 +1,10 @@
+{
+  "id": "scn-conversation-shift",
+  "title": "The moment the conversation changes",
+  "banner": "Fictional conversation. Use live analysis to interpret the indirect follow-up; fixture replay checks patterns only.",
+  "employerId": "figma",
+  "jobId": "",
+  "whatItShows": "Find a published role without a requisition, then trace an indirect transfer request back to the message where it first appeared.",
+  "text": "Synthetic recruiting conversation: I am contacting you about the Software Engineer Intern (Summer 2027) role at Figma in San Francisco. We will send funds for your workstation.",
+  "followUpText": "Keep 200 and transfer the remainder to our supplier."
+}

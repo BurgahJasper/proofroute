@@ -13,6 +13,7 @@ interface EvidenceRow {
 }
 
 interface AssessmentRow {
+  conversation?: { messageCount: number; firstSensitiveVersion: number | null; requests: Array<{ messageVersion: number; quote: string; action: string; origin: string }> };
   caseId: string;
   version: number;
   runId: string;
@@ -82,6 +83,11 @@ export function renderBriefMarkdown(input: {
   for (const finding of assessment.findings) {
     lines.push(`### ${finding.question}`, '', `Status: ${finding.status}`, '', finding.explanation, '');
     if (finding.inputSpan?.quote) lines.push(`Quoted span: "${finding.inputSpan.quote}"`, '');
+  }
+  if (assessment.conversation) {
+    lines.push('## Conversation history', '', `${assessment.conversation.messageCount} messages reviewed. First sensitive request: ${assessment.conversation.firstSensitiveVersion ?? 'not identified'}.`, '');
+    for (const request of assessment.conversation.requests) lines.push(`- Message ${request.messageVersion} (${request.origin}): ${request.action}. Quote: "${request.quote}"`);
+    lines.push('', 'Earlier sensitive requests remain unresolved even after a harmless reply.', '');
   }
   lines.push('## Unresolved', '');
   for (const question of assessment.unresolvedQuestions) lines.push(`- ${question}`);

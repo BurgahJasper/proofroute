@@ -17,6 +17,7 @@ import { newId, tokensMatch } from './ids.js';
 import { hashToken } from './ids.js';
 import { tryAcquire } from './limits.js';
 import { abortRun, enqueueRun, executeRun, markRefresh, releaseRunSlot } from './runner.js';
+import { conversationText, MAX_CONVERSATION_CHARS, MAX_CONVERSATION_MESSAGES, type Message } from './conversation.js';
 
 interface Deps {
   store: Store;
@@ -294,6 +295,7 @@ export function registerApi(app: FastifyInstance, deps: Deps): void {
           JSON.stringify(response),
           now,
         );
+        deps.store.run('UPDATE case_versions SET latest_run_id = ? WHERE case_id = ? AND version = ?', runId, params.id, version.version);
       });
     } catch (error) {
       releaseRunSlot(runId, session.id_hash);
@@ -392,6 +394,10 @@ export function registerApi(app: FastifyInstance, deps: Deps): void {
     }
     const reviewed = redactText(parsed.data.reviewedText).text;
     const next = Number(current.version) + 1;
+    const history = deps.store.all<Message>('SELECT version, reviewed_text FROM case_versions WHERE case_id = ? ORDER BY version', params.id);
+    if (next > MAX_CONVERSATION_MESSAGES || conversationText([...history, { version: next, reviewed_text: reviewed }]).length > MAX_CONVERSATION_CHARS) {
+      return fail(reply, 413, 'INPUT_TOO_LARGE', 'This check has reached its conversation limit (20 messages or 60,000 characters). Export it and start a new check.');
+    }
     const now = new Date().toISOString();
     const active = deps.store.all<{ id: string }>('SELECT id FROM runs WHERE case_id = ? AND status IN (\'queued\', \'running\')', params.id);
     deps.store.transaction(() => {
@@ -458,7 +464,7 @@ export function registerApi(app: FastifyInstance, deps: Deps): void {
       reply.header('content-disposition', 'attachment; filename="proofroute-brief.md"');
       return renderBriefMarkdown({
         title: snapshot.case.title,
-        reviewedText: snapshot.version.reviewedText,
+        reviewedText: snapshot.conversationText,
         assessment: snapshot.assessment as unknown as Parameters<typeof renderBriefMarkdown>[0]['assessment'],
         evidence: snapshot.evidence as unknown as Parameters<typeof renderBriefMarkdown>[0]['evidence'],
       });
@@ -470,6 +476,7 @@ export function registerApi(app: FastifyInstance, deps: Deps): void {
         label: 'Redacted ProofRoute record. The sender is not authenticated.',
         case: snapshot.case,
         version: snapshot.version,
+        conversationText: snapshot.conversationText,
         assessment: snapshot.assessment,
         evidence: snapshot.evidence,
       };
@@ -539,6 +546,7 @@ function buildSnapshot(deps: Deps, caseId: string, sessionHash: string) {
     caseId,
   );
   if (!version) return undefined;
+  const messages = deps.store.all<Message>('SELECT version, reviewed_text FROM case_versions WHERE case_id = ? ORDER BY version', caseId);
   const run = version.latest_run_id
     ? deps.store.get<{
         id: string;
@@ -633,6 +641,8 @@ function buildSnapshot(deps: Deps, caseId: string, sessionHash: string) {
         }
       : null,
     evidence,
+    conversationText: conversationText(messages),
+    messages: messages.map(m => ({ version: m.version, text: m.reviewed_text })),
     assessment,
     previousAssessment,
     events,
