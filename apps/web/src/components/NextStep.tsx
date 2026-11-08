@@ -13,6 +13,7 @@ export function NextStep({ assessment, caseId, loading, providerConfigured }: { 
         <p className="eyebrow">An independent way forward</p>
         {assessment.approvedRoute ? <><a className="official-route-button" data-testid="official-route" title={assessment.approvedRoute.label} href={assessment.approvedRoute.url} target="_blank" rel="noreferrer">{assessment.approvedRoute.kind === 'application' ? 'Open official application' : 'Open employer’s official route'}<span aria-hidden="true">↗</span></a><p className="route-caption">{new URL(assessment.approvedRoute.url).hostname} · Opens a new tab</p></> : <p className="mt-2 text-sm">No approved route is available. Seek an independent contact through the employer.</p>}
       </div>
+      {paused && assessment.conversation?.requests[0] ? <blockquote className="decision-trigger">“{assessment.conversation.requests[0].quote}”<cite>Message {assessment.conversation.requests[0].messageVersion}</cite></blockquote> : null}
       <details className="decision-explanation"><summary>Why this next step?</summary><ul>{assessment.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul></details>
       <details className="decision-limits"><summary>What this check cannot confirm</summary><ul>{assessment.unresolvedQuestions.map(item => <li key={item}>{item}</li>)}</ul><p>No recruiting verification contact was identified. Nothing is sent automatically.</p></details>
       <Link className="brief-button" to={`/cases/${caseId}/brief`}>Save or share your evidence <span aria-hidden="true">→</span></Link>

@@ -32,12 +32,12 @@ export function DemoPage() {
         <p className="eyebrow">Try a source image</p><h2>Start with a screenshot.</h2>
         <p>Choose a fictional conversation. Read it on this device, then review the text before sharing.</p>
         <div className="screenshot-sample-list">
-          <div className="screenshot-sample-row"><Link to="/?sampleImage=request">Equipment request <span aria-hidden="true">↗</span></Link><a href="/samples/recruiting-request.png" download aria-label="Download equipment-request screenshot">Download image ↓</a></div>
-          <div className="screenshot-sample-row"><Link to="/?sampleImage=benign">Ordinary outreach <span aria-hidden="true">↗</span></Link><a href="/samples/recruiting-benign.png" download aria-label="Download ordinary-outreach screenshot">Download image ↓</a></div>
+          <div className="screenshot-sample-row"><img className="sample-image-preview" src="/samples/recruiting-request.png" alt="Fictional equipment-payment request preview" loading="lazy" /><Link to="/?sampleImage=request">Equipment request <span aria-hidden="true">↗</span></Link><a href="/samples/recruiting-request.png" download aria-label="Download equipment-request screenshot">Download image ↓</a></div>
+          <div className="screenshot-sample-row"><img className="sample-image-preview" src="/samples/recruiting-benign.png" alt="Fictional ordinary recruiting email preview" loading="lazy" /><Link to="/?sampleImage=benign">Ordinary outreach <span aria-hidden="true">↗</span></Link><a href="/samples/recruiting-benign.png" download aria-label="Download ordinary-outreach screenshot">Download image ↓</a></div>
         </div>
       </section>
       <ul className="sample-grid">
-        {scenarios.filter(s => showAll || ['scn-benign-agency','scn-conversation-shift','scn-missing-listing'].includes(s.id)).map((scenario, index) => (
+        {scenarios.filter(s => showAll || ['scn-matching-domain-figma','scn-conversation-shift','scn-missing-listing'].includes(s.id)).map((scenario, index) => (
           <li key={scenario.id} className="sample-tile">
             <div className="sample-number" aria-hidden="true">0{index + 1}</div>
             <div><span className="eyebrow">Case 0{index + 1} · Synthetic</span><h2>{scenario.title}</h2><p>{scenario.whatItShows}</p></div>

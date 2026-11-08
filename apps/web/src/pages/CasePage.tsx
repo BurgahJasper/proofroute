@@ -229,14 +229,14 @@ export function CasePage() {
         </div>
       </div>
 
-      <ol className="case-progress mt-5 grid gap-2 sm:grid-cols-4" aria-label="Check progress">
+      {(!assessment || running) ? <ol className="case-progress mt-5 grid gap-2 sm:grid-cols-4" aria-label="Check progress">
         {STEPS.map((step, index) => (
           <li key={step} className={`rounded-control border px-3 py-2 text-sm ${index === stage ? 'border-ink bg-surface' : 'border-line'}`}>
             <span className="text-muted">{index < stage ? 'Done' : index === stage ? 'Now' : 'Later'}</span>
             <div className="font-medium">{step}</div>
           </li>
         ))}
-      </ol>
+      </ol> : null}
       {checkingJobs ? <p className="mt-3 text-sm">Checking the employer's published jobs… {elapsed}s elapsed.</p> : null}
       {snapshot?.run?.status === 'partial' || snapshot?.run?.status === 'interrupted' ? (
         <p className="mt-3 rounded-control bg-caution-soft px-3 py-2 text-sm text-caution">
