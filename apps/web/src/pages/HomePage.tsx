@@ -265,7 +265,7 @@ export function HomePage() {
         </> : null}
         {importing ? <p role="status" className="import-status">{inputKind === 'image' ? `Reading screenshot locally… ${Math.round(ocrProgress*100)}%` : 'Opening email locally…'}</p> : null}
         {importNote ? <p role="status" className="import-status">{importNote}</p> : null}
-        {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p>{scenarios.some(item => item.id === 'scn-sms-channel-shift') ? <button type="button" className="sample-start-secondary" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-sms-channel-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Or try an SMS to WhatsApp recruiting switch <span aria-hidden="true">↗</span></button> : null}</div> : null}
+        {step === 'paste' && inputKind === 'paste' && !text ? <details className="sample-start"><summary>Try a fictional example</summary><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Recruiting conversation <span aria-hidden="true">↗</span></button>{scenarios.some(item => item.id === 'scn-sms-channel-shift') ? <button type="button" className="sample-start-secondary" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-sms-channel-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>SMS to WhatsApp <span aria-hidden="true">↗</span></button> : null}</details> : null}
         {screenshot ? <div className="intake-image-preview"><img src={screenshot.image} alt="Screenshot selected for text extraction"/><p>The source image stays on this device. Only reviewed text is shared.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
         {step === 'review' ? (
@@ -274,14 +274,14 @@ export function HomePage() {
               <span className="eyebrow">Privacy shield · Local browser pass</span>
               <span className="preview-label">{summary.length ? `${summary.reduce((acc, item) => acc + item.count, 0)} redacted` : 'Checked locally'}</span>
             </div>
-            <p className="mt-1.5 text-sm text-supported">Personal details have been checked for redaction. Review the text below before sending it.</p>
+            <p className="mt-1.5 text-sm text-supported">Review the redacted text below.</p>
             <div className="privacy-pills">
               {summary.length ? summary.map((item) => (
                 <span key={item.category} className="privacy-pill">
                   ✓ Replaced {item.count} {item.category} {item.count === 1 ? 'value' : 'values'}
                 </span>
               )) : (
-                <span className="privacy-pill">✓ 0 raw credentials, phones, or SSNs detected</span>
+                <span className="privacy-pill">No sensitive values detected by this pass</span>
               )}
               {screenshot ? <span className="privacy-pill">✓ Source image stays on this device for 24 hours</span> : null}
             </div>
@@ -307,15 +307,6 @@ export function HomePage() {
           placeholder="Paste a fictional recruiting email or message here…"
         />
         <p className="mt-1 text-right font-mono text-[11px] text-muted">{text.length.toLocaleString()} / 20,000</p>
-        {step === 'review' && summary.length ? (
-          <ul className="mt-3 text-sm">
-            {summary.map((item) => (
-              <li key={item.category}>
-                Replaced {item.count} {item.category} {item.count === 1 ? 'value' : 'values'}. You can edit the result before the check.
-              </li>
-            ))}
-          </ul>
-        ) : null}
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-medium">
             Employer

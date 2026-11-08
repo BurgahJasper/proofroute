@@ -24,8 +24,8 @@ export function DemoPage() {
   return (
     <div className="sample-page" ref={root}>
       <p className="eyebrow">The field guide / Fictional conversations</p>
-      <h1>A convincing message.<br /><span className="text-action">An important distinction.</span></h1>
-      <p className="mt-5 max-w-prose text-muted">Explore the gray areas of a recruiting conversation. Start with a sample, inspect the evidence, then add a follow-up to see what changes.</p>
+      <h1>Try an example.</h1>
+      <p className="mt-5 max-w-prose text-muted">Choose a fictional message. Inspect the evidence, then add a follow-up.</p>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}
       {!scenarios.length && !error ? <p className="sample-loading" role="status">Opening the case index...</p> : null}
       <section className="screenshot-samples">

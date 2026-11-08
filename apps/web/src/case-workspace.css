@@ -135,4 +135,7 @@
 .decision-states > span { padding:6px 0; }
 .case-page .next-step-icon { background:var(--color-supported-soft); }
 .case-page .next-step[data-paused="true"] .next-step-icon { background:var(--color-danger-soft); }
+.sample-start > summary { min-height:44px; cursor:pointer; display:flex; align-items:center; font-size:13px; }
+.decision-explanation > summary::after,.decision-limits > summary::after,.analysis-disclosure > summary::after,.sample-start > summary::after { content:'+'; margin-left:auto; padding-left:16px; }
+.decision-explanation[open] > summary::after,.decision-limits[open] > summary::after,.analysis-disclosure[open] > summary::after,.sample-start[open] > summary::after { content:'−'; }
 @media print { .brief-sheet details > * { display:block !important; } .brief-sheet .brief-analysis { display:block; } }
