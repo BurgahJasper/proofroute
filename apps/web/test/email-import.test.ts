@@ -30,3 +30,11 @@ test('wrong format, oversized files, empty and overlong bodies fail clearly', as
 test('HTML nested ignored content does not escape into review',()=>{
  assert.equal(emailHtmlToText('<head><style>x</style></head><p>Safe &amp; readable</p>'),'Safe & readable');
 });
+
+test('all matching-domain demo email files import with clear fictional labels', async () => {
+ for(const company of ['figma','gitlab','cloudflare']) {
+  const raw=await readFile(new URL(`../public/samples/matching-domain-${company}.eml`,import.meta.url),'utf8');
+  const result=await parseEmailFile(file(raw));
+  assert.match(result.text,/FICTIONAL DEMO/);assert.match(result.text,new RegExp('@'+company+'\\.com'));assert.match(result.text,/never sent/);
+ }
+});

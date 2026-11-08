@@ -1,0 +1,10 @@
+{
+  "id": "scn-matching-domain-gitlab",
+  "title": "GitLab: familiar domain, unverified sender",
+  "banner": "Fictional identity and mailbox. Matching header text does not authenticate a sender.",
+  "employerId": "gitlab",
+  "jobId": "8638232002",
+  "whatItShows": "The From and Reply-To domains match the reviewed company domain. Add the payment follow-up: the risky request must still be paused.",
+  "text": "From: \"Alex Demo (fictional recruiter)\" <proofroute-fictional-demo-do-not-contact@gitlab.com>\nReply-To: <proofroute-fictional-demo-do-not-contact@gitlab.com>\nSubject: [FICTIONAL DEMO] AI Transformation Owner, CRO\n\nFICTIONAL DEMO \u2014 never sent. The recruiter name and mailbox are invented. GitLab did not write this message. Do not contact this mailbox. The real company domain appears only to demonstrate an unverified header claim.\n\nHello Demo Student,\nI am contacting you about the AI Transformation Owner, CRO role at GitLab. Please review the published role through the official application route.\nAlex Demo (fictional)",
+  "followUpText": "Before the interview, send a $200 equipment payment to our supplier."
+}

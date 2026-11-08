@@ -147,3 +147,13 @@ test('redaction removes canaries and keeps a domain for comparison', () => {
   assert.equal(result.text.includes('4111111111111111'), false);
   assert.match(result.text, /\[LOCAL\]@example\.com/);
 });
+
+test('matching company headers never clear a fictional equipment-payment request', () => {
+  for (const company of ['figma', 'gitlab', 'cloudflare']) {
+    const sample = JSON.parse(readFileSync(new URL(`../../../data/scenarios/matching-domain-${company}.json`, import.meta.url), 'utf8'));
+    const reviewedText = redactText(sample.text + '\n\n' + sample.followUpText).text;
+    const result = reduceAssessment(base({reviewedText, risks:detectRisks(reviewedText), domain:{mode:'live',submittedDomain:`${company}.com`,knownDomains:[`${company}.com`],registrableMatch:true,note:'Header string match only.'}}));
+    assert.equal(result.recommendedAction, 'pause_sensitive_action', company);
+    assert.equal(result.findings.find(f => f.claimKey === 'sender')?.status, 'unresolved');
+  }
+});

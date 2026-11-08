@@ -32,7 +32,7 @@ export function DemoPage() {
           <li key={scenario.id} className="sample-tile">
             <div className="sample-number" aria-hidden="true">0{index + 1}</div>
             <div><span className="eyebrow">Case 0{index + 1} · Synthetic</span><h2>{scenario.title}</h2><p>{scenario.whatItShows}</p></div>
-            <div className="sample-tile-actions"><Link to={`/?scenario=${scenario.id}`}>Explore this case <span aria-hidden="true">↗</span></Link></div>
+            <div className="sample-tile-actions"><Link to={`/?scenario=${scenario.id}`}>Explore this case <span aria-hidden="true">↗</span></Link>{scenario.id.startsWith('scn-matching-domain-') ? <a href={`/samples/matching-domain-${scenario.employerId}.eml`} download>Download fictional email ↓</a> : null}</div>
           </li>
         ))}
       </ul>

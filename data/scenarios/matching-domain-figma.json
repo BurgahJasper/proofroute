@@ -1,0 +1,10 @@
+{
+  "id": "scn-matching-domain-figma",
+  "title": "Figma: familiar domain, unverified sender",
+  "banner": "Fictional identity and mailbox. Matching header text does not authenticate a sender.",
+  "employerId": "figma",
+  "jobId": "6143238004",
+  "whatItShows": "The From and Reply-To domains match the reviewed company domain. Add the payment follow-up: the risky request must still be paused.",
+  "text": "From: \"Alex Demo (fictional recruiter)\" <proofroute-fictional-demo-do-not-contact@figma.com>\nReply-To: <proofroute-fictional-demo-do-not-contact@figma.com>\nSubject: [FICTIONAL DEMO] Software Engineer Intern (Summer 2027)\n\nFICTIONAL DEMO \u2014 never sent. The recruiter name and mailbox are invented. Figma did not write this message. Do not contact this mailbox. The real company domain appears only to demonstrate an unverified header claim.\n\nHello Demo Student,\nI am contacting you about the Software Engineer Intern (Summer 2027) role at Figma. Please review the published role through the official application route.\nAlex Demo (fictional)",
+  "followUpText": "Before the interview, send a $200 equipment payment to our supplier."
+}
