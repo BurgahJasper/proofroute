@@ -180,19 +180,21 @@ export function HomePage() {
         }}
       >
         <div className="intake-heading"><div><p className="eyebrow">Your evidence desk</p><h2>{step === 'paste' ? 'Start with the message.' : 'Review before you share.'}</h2></div><span className="step-count">{step === 'paste' ? '01' : '02'}<span> / 02</span></span></div>
-        <div className="intake-stepper" aria-label="Message review progress"><span className={step === 'paste' ? 'active' : 'complete'}>1. Add a message</span><span className={step === 'review' ? 'active' : ''}>2. Review & check</span></div>
         {step === 'paste' ? <>
           <div className="input-choice" role="group" aria-label="Choose how to add your message">
             <button type="button" aria-pressed={inputKind === 'paste'} onClick={() => { importVersion.current++; setImporting(false); setInputKind('paste'); setError(''); }}>Paste a message</button>
             <button type="button" aria-pressed={inputKind === 'email'} onClick={() => { setInputKind('email'); setError(''); }}>Upload an email</button>
           </div>
           {inputKind === 'email' ? <div className="email-import">
-            <p className="eyebrow">An email. The same evidence check.</p>
-            <h3>Bring the conversation.</h3>
-            <p>Open an .eml file from your mail app. Read locally, then review what you share.</p>
-            <label className="email-file-label" htmlFor="email-file">Choose an email file <span aria-hidden="true">↗</span></label>
-            <input id="email-file" type="file" accept=".eml,message/rfc822" disabled={importing} onChange={event => { void importEmail(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
-            <p className="email-import-help">Up to 2 MB · Attachments and remote images are not opened.</p>
+            <div className="email-picker">
+              <input id="email-file" type="file" aria-label="Choose an email file" accept=".eml,message/rfc822" disabled={importing} onChange={event => { void importEmail(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
+              <label htmlFor="email-file">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.2"/><path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.2"/></svg>
+                <strong>{text ? 'Choose another email' : 'Choose an email file'}</strong>
+                <span>.eml · Up to 2 MB</span>
+              </label>
+            </div>
+            <p className="email-import-help">Opened on your device. You review the text before sharing.</p>
             <a href="/samples/fictional-recruiting.eml" download>Download a fictional email to try <span aria-hidden="true">↓</span></a>
           </div> : null}
         </> : null}
@@ -201,6 +203,7 @@ export function HomePage() {
         {step === 'paste' && inputKind === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-conversation-shift'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Find the moment the conversation changes <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
         {step === 'review' ? <p className="mb-3 text-sm text-supported" role="status">Personal details have been checked for redaction. Review the text below before sending it.</p> : null}
+        {inputKind === 'paste' || text ? <>
         <label className="block text-sm font-medium" htmlFor="offer">
           {step === 'review' ? 'Reviewed message' : 'Recruiting message'}
         </label>
@@ -267,12 +270,13 @@ export function HomePage() {
             <span>This message is synthetic or fully fictional.</span>
           </label>
         ) : null}
+        </> : null}
         {error ? (
           <p className="mt-3 text-sm text-danger" role="alert">
             {error}
           </p>
         ) : null}
-        <div className="intake-actions">
+        {inputKind === 'paste' || text ? <div className="intake-actions">
           {step === 'paste' ? (
             <button type="submit" className="primary-button" disabled={!text.trim() || tooLong || importing}>
               Review this message <span aria-hidden="true">↗</span>
@@ -293,7 +297,7 @@ export function HomePage() {
           >
             Try a sample
           </button>
-        </div>
+        </div> : null}
         <p className="intake-privacy">
           <svg width="15" height="17" viewBox="0 0 20 22" fill="none" aria-hidden="true"><path d="M3 9V6a7 7 0 0 1 14 0v3M2 9h16v11H2z" stroke="currentColor" strokeWidth="1.5" /><circle cx="10" cy="14" r="1.5" fill="currentColor" /></svg>
           <span>Redaction happens in your browser. Only after <strong>Check this offer</strong> is reviewed text sent to our server and AI provider. Never paste real passwords or login codes.</span>
