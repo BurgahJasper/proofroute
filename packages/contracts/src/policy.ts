@@ -24,6 +24,12 @@ const QUESTIONS: Record<ClaimKey, string> = {
 const FORBIDDEN_REASON =
   /\b(sender (is )?(authenticated|authorized|verified|legitimate)|verified sender|offer verified|guaranteed safe|safe offer|this (offer|recruiter) is safe)\b/i;
 
+function requestSummary(risks: RiskHit[], type: 'conjunction' | 'disjunction'): string {
+  const labels = { password: 'passwords', otp: 'login codes', payment: 'payment', check_forwarding: 'check forwarding', sensitive_identifier: 'sensitive personal details' };
+  const distinct = [...new Set(risks.map((risk) => labels[risk.category]))];
+  return new Intl.ListFormat('en', { style: 'long', type }).format(distinct);
+}
+
 function emptySpan(text: string): TextSpan {
   // A carried-over source can support a listing without a matching phrase
   // in this message. Never fabricate a quote from an unrelated prefix.
@@ -204,7 +210,7 @@ export function reduceAssessment(input: PolicyInput): AssessmentDraft {
       status: input.risks.length ? 'supported' : 'unresolved',
       evidenceKeys: input.risks.length ? ['request'] : [],
       explanation: input.risks.length
-        ? `The reviewed message asks for ${input.risks.map((risk) => risk.label).join(' and ')}. That request is paused even if a real listing exists.`
+        ? `The reviewed conversation asks for ${requestSummary(input.risks, 'conjunction')}. These requests stay paused even if a real listing exists.`
         : input.ambiguousRequest
           ? 'The message mentions onboarding or documents without a specific password, payment, or identifier request. That is unresolved, not proof the request is harmless.'
           : 'No password, payment, check-forwarding, or sensitive-identifier request was detected in the reviewed text. That is not a safety certification.',
@@ -223,9 +229,7 @@ export function reduceAssessment(input: PolicyInput): AssessmentDraft {
 
   const reasons: string[] = [];
   if (recommendedAction === 'pause_sensitive_action') {
-    const requestLabels = { password: 'passwords', otp: 'login codes', payment: 'payment', check_forwarding: 'check forwarding', sensitive_identifier: 'sensitive personal details' };
-    const distinctRequests = [...new Set(input.risks.map((risk) => requestLabels[risk.category]))];
-    reasons.push(`Pause requests for ${new Intl.ListFormat('en', { style: 'long', type: 'disjunction' }).format(distinctRequests)}.`);
+    reasons.push(`Pause requests for ${requestSummary(input.risks, 'disjunction')}.`);
   }
   if (input.listing?.found) {
     reasons.push('Listing found on the employer-linked job board. This does not verify the sender.');

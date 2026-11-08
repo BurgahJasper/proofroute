@@ -162,4 +162,5 @@ test('repeated conversation risks produce one readable request summary', () => {
   const risks = detectRisks('Send a $200 equipment payment. Share your login code.');
   const result = reduceAssessment(base({ risks: [...risks, ...risks] }));
   assert.equal(result.reasons[0], 'Pause requests for login codes or payment.');
+  assert.equal(result.findings.find(finding => finding.claimKey === 'request')?.explanation, 'The reviewed conversation asks for login codes and payment. These requests stay paused even if a real listing exists.');
 });
