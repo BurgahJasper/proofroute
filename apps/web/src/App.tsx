@@ -1,4 +1,5 @@
-import { Link, Outlet, Route, Routes } from 'react-router';
+import { useEffect } from 'react';
+import { Link, Outlet, Route, Routes, useLocation } from 'react-router';
 import { BriefPage } from './pages/BriefPage';
 import { CasePage } from './pages/CasePage';
 import { DemoPage } from './pages/DemoPage';
@@ -7,6 +8,12 @@ import { UiProvider, useUi, Wordmark } from './ui';
 
 function Shell() {
   const { reduceMotion, toggleMotion } = useUi();
+  const location = useLocation();
+  useEffect(() => {
+    const target = location.hash ? document.getElementById(location.hash.slice(1)) : document.getElementById('main');
+    target?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    if (!location.hash) target?.focus({ preventScroll: true });
+  }, [location.pathname, location.hash]);
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-surface focus:px-3 focus:py-2">
@@ -30,7 +37,7 @@ function Shell() {
           </nav>
         </div>
       </header>
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         <Outlet />
       </main>
       <footer className="site-footer"><p>ProofRoute <span aria-hidden="true"> / </span> An evidence desk for your next opportunity.</p><p>HackUTD 2026 · Synthetic demo · Sender identity stays unverified.</p></footer>

@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { normalizeRoleReference, redactText } from '@proofroute/contracts/browser';
 import { createCase, ensureSession, getEmployers, getScenarios, startRun, type EmployerOption, type Scenario, type SessionInfo } from '../api';
 import { useUi } from '../ui';
+import { StoryPreview } from '../components/StoryPreview';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -89,6 +90,11 @@ export function HomePage() {
   }
 
   async function checkOffer() {
+    if (busy) return;
+    if (!text.trim() || tooLong || role.error) {
+      setError(role.error || 'Add a message of 20,000 characters or fewer.');
+      return;
+    }
     if (!attested) {
       setError('Confirm this message is synthetic before continuing.');
       return;
@@ -125,17 +131,12 @@ export function HomePage() {
           A little evidence. A clearer next step.
         </p>
         <h1 className="hero-title" data-reveal>
-          The job may<br /> be real.<br /><span>Check who’s<br className="desktop-break" /> offering it.</span>
+          Real job.<br /><span>Wrong person?</span>
         </h1>
         <p className="hero-description" data-reveal>
-          A convincing offer isn’t the whole story. Trace the claims, see the sources, and find your way back to the employer.
+          Don’t lose a good opportunity to a convincing message. Check the evidence. Keep your next move in your hands.
         </p>
-        <div className="evidence-preview" data-reveal>
-          <div className="flex items-center justify-between gap-3"><span className="eyebrow">The distinction that matters</span><span className="preview-label">Illustration</span></div>
-          <div className="preview-track" aria-hidden="true"><span className="preview-node">01</span><span className="preview-connection" /><span className="preview-node">02</span><span className="preview-connection uncertain" /><span className="preview-node uncertain">?</span></div>
-          <div className="preview-labels"><span>Employer<br /><strong>Official source</strong></span><span>Job listing<br /><strong>Can be supported</strong></span><span>Sender<br /><strong className="text-caution">Still unverified</strong></span></div>
-          <p className="preview-footnote">A real vacancy is evidence of a job.<br />It isn’t proof of who sent the message.</p>
-        </div>
+        <StoryPreview />
       </div>
 
       <form
@@ -148,6 +149,7 @@ export function HomePage() {
       >
         <div className="intake-heading"><div><p className="eyebrow">Your evidence desk</p><h2>{step === 'paste' ? 'Start with the message.' : 'Review before you share.'}</h2></div><span className="step-count">{step === 'paste' ? '01' : '02'}<span> / 02</span></span></div>
         <div className="intake-stepper" aria-label="Message review progress"><span className={step === 'paste' ? 'active' : 'complete'}>1. Add a message</span><span className={step === 'review' ? 'active' : ''}>2. Review & check</span></div>
+        {step === 'paste' && !text ? <div className="sample-start"><span className="eyebrow">No message? Start here.</span><button type="button" disabled={!scenarios.length} onClick={() => { const sample = scenarios.find(item => item.id === 'scn-real-listing'); if (sample) { applyScenario(sample); document.getElementById('offer')?.focus(); } }}>Explore a convincing internship offer <span aria-hidden="true">↗</span></button><p>Fictional sender. A real public job board.</p></div> : null}
         {banner ? <p className="sample-banner" role="status">{banner}</p> : null}
         {step === 'review' ? <p className="mb-3 text-sm text-supported" role="status">Personal details have been checked for redaction. Review the text below before sending it.</p> : null}
         <label className="block text-sm font-medium" htmlFor="offer">
@@ -159,6 +161,7 @@ export function HomePage() {
           value={text}
           onChange={(event) => {
             setText(event.target.value);
+            setAttested(false);
             if (step === 'review') setStep('paste');
           }}
           maxLength={20000}
@@ -180,7 +183,7 @@ export function HomePage() {
             <select
               className="mt-2 min-h-11 w-full rounded-control border border-ink/30 bg-paper px-3"
               value={employerId}
-              onChange={(event) => setEmployerId(event.target.value)}
+              onChange={(event) => { setEmployerId(event.target.value); setStep('paste'); }}
             >
               {employers.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -195,7 +198,7 @@ export function HomePage() {
             <input
               className="mt-2 min-h-11 w-full rounded-control border border-ink/30 bg-paper px-3"
               value={roleReference}
-              onChange={(event) => setRoleReference(event.target.value)}
+              onChange={(event) => { setRoleReference(event.target.value); setStep('paste'); }}
               placeholder="Optional"
             />
           </label>

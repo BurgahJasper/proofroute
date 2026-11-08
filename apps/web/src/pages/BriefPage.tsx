@@ -81,12 +81,14 @@ export function BriefPage() {
         type="button"
         className="mt-3 min-h-11 rounded-control border border-ink px-4"
         onClick={() => {
-          void navigator.clipboard.writeText(draft).then(() => setCopied('Draft copied.'));
+          void navigator.clipboard.writeText(draft).then(() => setCopied('Draft copied.')).catch(() => setCopied('Clipboard unavailable. Select and copy the draft above.'));
         }}
+        disabled={!assessment}
       >
         Copy draft
       </button>
-      {copied ? <p className="mt-2 text-sm">{copied}</p> : null}
+      {copied ? <p className="mt-2 text-sm" role="status">{copied}</p> : null}
+      {assessment ? <><h2 className="mt-8 text-lg font-semibold">Evidence attached</h2><p className="mt-2 text-sm text-muted">Each source has a limited scope. None authenticates the sender.</p><ul className="mt-4 space-y-3">{snapshot.evidence.map(item => <li key={item.id} className="rounded-control border border-line p-3"><p className="eyebrow">{item.scope.replaceAll('_', ' ')} · {item.sourceMode}</p><p className="mt-2 text-sm">{item.limitations[0]}</p>{item.sourceUrl ? <a className="mt-2 block break-all text-sm underline" href={item.sourceUrl} target="_blank" rel="noreferrer">{item.sourceUrl}</a> : <p className="mt-2 text-sm">Source: the reviewed message.</p>}</li>)}</ul></> : null}
       <h2 className="mt-8 text-lg font-semibold">For a career adviser</h2>
       <p className="mt-2 max-w-prose">
         Share the downloaded brief if you want help. It records what was checked, what is unresolved, and the official route. It does not say the sender was verified, and it does not include an unredacted original.

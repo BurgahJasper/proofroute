@@ -12,23 +12,21 @@ export function DemoPage() {
     })().catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'Samples could not load.'));
   }, []);
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-editorial text-4xl">Synthetic samples</h1>
-      <p className="mt-3 max-w-prose">Each sample is labeled. Public listing data, when a live check is used, is separate from the fictional sender.</p>
+    <div className="sample-page">
+      <p className="eyebrow">The field guide / Three fictional conversations</p>
+      <h1>A convincing message.<br /><span className="text-action">An important distinction.</span></h1>
+      <p className="mt-5 max-w-prose text-muted">Explore the gray areas of a recruiting conversation. Start with a sample, inspect the evidence, then add a follow-up to see what changes.</p>
       {error ? <p className="mt-4 text-danger">{error}</p> : null}
-      <ul className="mt-8 space-y-4">
-        {scenarios.map((scenario) => (
-          <li key={scenario.id} className="rounded-panel border border-line bg-surface p-5">
-            <p className="text-sm font-medium">Synthetic scenario</p>
-            <h2 className="mt-1 text-xl">{scenario.title}</h2>
-            <p className="mt-2 text-sm">{scenario.banner}</p>
-            <p className="mt-2 max-w-prose">{scenario.whatItShows}</p>
-            <Link className="mt-4 inline-flex min-h-11 items-center rounded-control bg-action px-4 text-action-ink no-underline" to={`/?scenario=${scenario.id}`}>
-              Use this sample
-            </Link>
+      <ul className="sample-grid">
+        {scenarios.map((scenario, index) => (
+          <li key={scenario.id} className="sample-tile">
+            <div className="sample-art" aria-hidden="true"><span>0{index + 1}</span><i>→</i><span>?</span></div>
+            <div><span className="eyebrow">Case 0{index + 1} · Synthetic</span><h2>{scenario.title}</h2><p>{scenario.whatItShows}</p></div>
+            <div className="sample-tile-actions"><Link to={`/?scenario=${scenario.id}`}>Explore this case <span aria-hidden="true">↗</span></Link></div>
           </li>
         ))}
       </ul>
+      <p className="mt-6 max-w-prose text-sm text-muted">Fictional senders, no employer affiliation. Live checks read public listing data; fixture replay uses labeled recorded evidence. This demo never authenticates the sender.</p>
     </div>
   );
 }

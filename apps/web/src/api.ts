@@ -121,6 +121,7 @@ export interface CaseSnapshot {
   } | null;
   evidence: EvidenceItem[];
   assessment: Assessment | null;
+  previousAssessment?: Assessment | null;
   events: Array<{ sequence: number; type: string; payload: Record<string, unknown> }>;
   latestSequence: number;
   demoMode: boolean;
